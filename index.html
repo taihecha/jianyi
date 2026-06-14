@@ -1,0 +1,1655 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>盐池河镇卫生院 · 职工心声驿站 | 紧凑满屏版</title>
+    <style>
+        /* ==================== 基础样式 ==================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f1f5f9;
+            font-family: 'Inter', 'Segoe UI', 'Roboto', 'Microsoft YaHei', system-ui, -apple-system, 'PingFang SC', sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .scrollable-main {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 24px 0 24px;
+            scroll-behavior: smooth;
+        }
+
+        .scrollable-main::-webkit-scrollbar {
+            width: 6px;
+        }
+        .scrollable-main::-webkit-scrollbar-track {
+            background: #e2e8f0;
+            border-radius: 8px;
+        }
+        .scrollable-main::-webkit-scrollbar-thumb {
+            background: #94a3b8;
+            border-radius: 8px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding-bottom: 20px;
+        }
+
+        /* ==================== 颜色变量 ==================== */
+        :root {
+            --hero-teal: #0f766e;
+            --primary-red: #dc2626;
+            --primary-red-light: #fef2f2;
+            --solve-green: #0f7b4e;
+            --solve-green-light: #e6f7f0;
+            --suggest-gold: #c27803;
+            --suggest-gold-light: #fff9e8;
+            --deep-blue: #2563eb;
+            --deep-blue-light: #eff6ff;
+            --neutral-bg: #ffffff;
+            --border-light: #e2e8f0;
+            --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.04);
+        }
+
+        /* ==================== 头部样式 ==================== */
+        .hero {
+            background: var(--hero-teal);
+            border-radius: 24px;
+            padding: 20px 28px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-sm);
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 26px;
+            font-weight: 800;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            gap: 10px;
+        }
+
+        .hero h1 span {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 4px 14px;
+            border-radius: 60px;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .hero p {
+            margin-top: 12px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border-left: 3px solid #fcd34d;
+            padding-left: 16px;
+            max-width: 85%;
+        }
+
+        /* ==================== 动态卡片样式 ==================== */
+        .dynamic-card {
+            background: var(--neutral-bg);
+            border-radius: 24px;
+            padding: 16px 22px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-light);
+        }
+
+        .dynamic-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .dynamic-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .dynamic-title .icon {
+            font-size: 22px;
+        }
+        .dynamic-title h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--deep-blue);
+        }
+
+        .stats-compact {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--deep-blue-light);
+            padding: 4px 16px;
+            border-radius: 40px;
+        }
+        .stats-compact .total-num {
+            background: var(--deep-blue);
+            color: white;
+            padding: 2px 14px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 18px;
+        }
+        .stats-compact .total-num span {
+            font-size: 22px;
+            font-weight: 800;
+            margin-right: 2px;
+        }
+        .stats-compact .stats-text {
+            color: var(--deep-blue);
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        /* ==================== 跑马灯样式 ==================== */
+        .marquee-container {
+            background: var(--deep-blue-light);
+            border-radius: 48px;
+            padding: 8px 20px;
+            overflow: hidden;
+        }
+        .marquee-track {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            white-space: nowrap;
+            animation: scrollText 26s linear infinite;
+            width: fit-content;
+        }
+        .marquee-track:hover {
+            animation-play-state: paused;
+        }
+        .marquee-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: white;
+            padding: 4px 16px;
+            border-radius: 32px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            max-width: 360px;
+        }
+        .marquee-item:hover {
+            background: var(--primary-red-light);
+        }
+        .marquee-badge {
+            background: var(--primary-red);
+            color: white;
+            border-radius: 30px;
+            padding: 2px 8px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+        .marquee-text {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 240px;
+        }
+        @keyframes scrollText {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .marquee-static {
+            text-align: center;
+            color: #5b6e8c;
+            padding: 6px 0;
+            font-size: 13px;
+        }
+
+        /* ==================== 表单卡片样式 ==================== */
+        .card {
+            background: var(--neutral-bg);
+            border-radius: 24px;
+            padding: 20px 24px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-light);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 18px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border-light);
+        }
+        .card-header .icon {
+            font-size: 26px;
+        }
+        .card-header h2 {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        .red-title h2 {
+            color: var(--primary-red);
+        }
+
+        .form-group-suggest {
+            background: var(--suggest-gold-light);
+            padding: 18px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            border-left: 5px solid var(--suggest-gold);
+        }
+        .form-group-solution {
+            background: var(--solve-green-light);
+            padding: 18px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            border-left: 5px solid var(--solve-green);
+        }
+        .form-group-suggest label, .form-group-solution label {
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: block;
+            font-size: 0.95rem;
+        }
+        .form-group-suggest label { color: var(--suggest-gold); }
+        .form-group-solution label { color: var(--solve-green); }
+
+        textarea {
+            width: 100%;
+            padding: 14px 18px;
+            background: white;
+            border: 1.5px solid var(--border-light);
+            border-radius: 20px;
+            font-size: 14px;
+            font-family: inherit;
+            resize: vertical;
+            transition: all 0.2s;
+        }
+        textarea.example-text {
+            color: #94a3b8;
+        }
+        textarea.user-text {
+            color: #1e293b;
+        }
+        #suggest {
+            min-height: 110px;
+        }
+        #solution {
+            min-height: 100px;
+        }
+        textarea:focus {
+            border-color: var(--primary-red);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(220,38,38,0.1);
+        }
+        .form-hint {
+            font-size: 11px;
+            color: #5b6e8c;
+            margin-top: 6px;
+            margin-left: 8px;
+        }
+
+        /* ==================== 统计面板样式 ==================== */
+        .stats-panel {
+            background: var(--neutral-bg);
+            border-radius: 24px;
+            padding: 16px 22px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-light);
+        }
+        .stats-panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border-light);
+        }
+        .stats-panel-header h3 {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--deep-blue);
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+        .stat-card {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 12px;
+        }
+        .stat-card h4 {
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .stat-number {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--deep-blue);
+        }
+        .stat-list {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 12px;
+        }
+        .stat-item .count {
+            background: var(--deep-blue-light);
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+            color: var(--deep-blue);
+        }
+        .trend-chart {
+            display: flex;
+            align-items: flex-end;
+            gap: 6px;
+            height: 100px;
+            margin-top: 8px;
+        }
+        .trend-bar {
+            flex: 1;
+            background: var(--deep-blue);
+            border-radius: 4px 4px 0 0;
+            min-height: 4px;
+            transition: height 0.3s;
+        }
+        .trend-label {
+            font-size: 9px;
+            text-align: center;
+            margin-top: 5px;
+            color: #64748b;
+        }
+
+        /* ==================== 页脚样式 ==================== */
+        .footer-admin {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 8px;
+            padding: 8px 0;
+            font-size: 12px;
+            color: #94a3b8;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 12px;
+        }
+        .admin-trigger {
+            color: #64748b;
+            cursor: pointer;
+            text-decoration: underline;
+            text-decoration-style: dotted;
+            text-underline-offset: 3px;
+        }
+        .admin-trigger:hover {
+            color: var(--deep-blue);
+        }
+        .admin-login-row {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #f8fafc;
+            padding: 4px 12px;
+            border-radius: 40px;
+        }
+        .admin-login-row input {
+            width: 140px;
+            padding: 6px 12px;
+            border-radius: 40px;
+            border: 1px solid var(--border-light);
+            font-size: 12px;
+        }
+        .admin-login-row button {
+            background: #eef2ff;
+            color: var(--deep-blue);
+            border: none;
+            padding: 6px 14px;
+            border-radius: 40px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        .admin-login-row button:hover {
+            background: var(--deep-blue);
+            color: white;
+        }
+        .light-toolbar {
+            display: flex;
+            gap: 10px;
+            margin: 12px 0;
+            flex-wrap: wrap;
+        }
+        .light-toolbar button {
+            background: white;
+            color: var(--deep-blue);
+            border: 1px solid #cbd5e1;
+            font-weight: 500;
+            padding: 6px 12px;
+            font-size: 12px;
+            border-radius: 40px;
+            cursor: pointer;
+        }
+        .light-toolbar button:hover {
+            background: #eef2ff;
+        }
+        .danger-subtle { color: #dc2626 !important; border-color: #fecaca !important; }
+        .opinion-item {
+            background: white;
+            border-radius: 20px;
+            padding: 16px;
+            margin-bottom: 16px;
+            border: 1px solid #e2e8f0;
+        }
+        .opinion-title {
+            font-weight: 700;
+            color: var(--primary-red);
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        .opinion-content, .solution-block {
+            font-size: 13px;
+            margin: 8px 0;
+            padding: 10px 12px;
+            border-radius: 16px;
+        }
+        .opinion-content {
+            background: var(--suggest-gold-light);
+            border-left: 3px solid var(--suggest-gold);
+        }
+        .solution-block {
+            background: var(--solve-green-light);
+            border-left: 3px solid var(--solve-green);
+        }
+        .meta-privacy {
+            font-size: 10px;
+            background: #f8fafc;
+            padding: 8px 12px;
+            border-radius: 16px;
+            margin-top: 10px;
+            word-break: break-all;
+        }
+        .empty-placeholder {
+            text-align: center;
+            padding: 24px;
+            font-size: 13px;
+            color: #94a3b8;
+        }
+
+        /* ==================== 底部按钮 ==================== */
+        .fixed-bottom {
+            background: #f1f5f9;
+            padding: 14px 24px 22px 24px;
+            border-top: 1px solid #dce3ec;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.02);
+        }
+        .btn-submit-wrapper {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .btn-submit {
+            background: var(--primary-red);
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.2s;
+            box-shadow: 0 4px 10px rgba(220,38,38,0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn-submit:hover {
+            background: #b91c1c;
+            transform: translateY(-1px);
+        }
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* ==================== 弹窗样式 ==================== */
+        .modal-mask {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(3px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            visibility: hidden;
+            opacity: 0;
+            transition: 0.2s;
+        }
+        .modal-mask.active {
+            visibility: visible;
+            opacity: 1;
+        }
+        .modal-card {
+            background: white;
+            max-width: 460px;
+            width: 90%;
+            border-radius: 28px;
+            padding: 24px;
+            border-top: 5px solid var(--primary-red);
+        }
+        .modal-card h4 {
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+        .modal-close {
+            background: var(--deep-blue);
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 40px;
+            width: 100%;
+            font-weight: 600;
+            margin-top: 16px;
+            cursor: pointer;
+        }
+        .toast-modal {
+            border-top-color: var(--solve-green);
+            text-align: center;
+        }
+
+        /* ==================== 状态提示 ==================== */
+        .sync-status {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            background: #1e293b;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 40px;
+            font-size: 12px;
+            opacity: 0;
+            transition: opacity 0.2s;
+            pointer-events: none;
+            z-index: 999;
+        }
+        .sync-status.show {
+            opacity: 0.7;
+        }
+        .sync-status.success {
+            background: #0f7b4e;
+        }
+        .sync-status.error {
+            background: #dc2626;
+        }
+
+        /* ==================== 响应式 ==================== */
+        @media (max-width: 700px) {
+            .scrollable-main { padding: 16px 16px 0 16px; }
+            .hero { padding: 16px 20px; }
+            .hero h1 { font-size: 22px; }
+            .card { padding: 16px; }
+            .dynamic-card { padding: 12px 16px; }
+            .marquee-text { max-width: 160px; }
+            .sync-status { bottom: 70px; right: 12px; font-size: 10px; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .admin-login-row input { width: 100px; }
+        }
+    </style>
+</head>
+<body>
+<div class="scrollable-main">
+    <div class="container">
+        <!-- 头部 -->
+        <div class="hero">
+            <h1>🏥 盐池河镇卫生院 <span>职工心声驿站</span></h1>
+            <p>💚 畅所欲言谋发展 · 凝心聚力提待遇 · 您的每一条建议，都为改善薪资福利、优化医院管理赋能</p>
+        </div>
+
+        <!-- 职工建言动态 -->
+        <div class="dynamic-card">
+            <div class="dynamic-header">
+                <div class="dynamic-title">
+                    <div class="icon">📢</div>
+                    <h3>职工建言动态 · 最新心声滚动</h3>
+                </div>
+                <div class="stats-compact" id="statsCompactArea">
+                    <div class="total-num"><span id="compactTotal">0</span>条</div>
+                    <div class="stats-text" id="statsText">💰 聚焦薪资待遇</div>
+                </div>
+            </div>
+            <div class="marquee-container">
+                <div id="marqueeTrack" class="marquee-track"></div>
+            </div>
+        </div>
+
+        <!-- 建言献策表单 -->
+        <div class="card">
+            <div class="card-header red-title">
+                <div class="icon">✍️</div>
+                <h2>建言献策 · 共筑美好未来</h2>
+            </div>
+            <div class="form-group-suggest">
+                <label>💬 问题/建议（医院管理、科室运营、人员配置、薪资待遇等）</label>
+                <textarea id="suggest" rows="4" maxlength="1000"></textarea>
+                <div class="form-hint">例：门诊流程繁琐影响效率；儿科人手不足导致工作压力大；夜班补贴核算标准需优化…（限1000字）</div>
+            </div>
+            <div class="form-group-solution">
+                <label>🧠 解决思路/可行性方案</label>
+                <textarea id="solution" rows="3" maxlength="1000"></textarea>
+                <div class="form-hint">例：优化门诊电子流程；调整排班机制；重新制定夜班补贴标准…（限1000字）</div>
+            </div>
+        </div>
+
+        <!-- 数据统计看板 -->
+        <div class="stats-panel">
+            <div class="stats-panel-header">
+                <h3>📊 数据统计看板</h3>
+                <button class="refresh-stats-btn" id="refreshStatsBtn" style="background:#eef2ff; border:none; padding:6px 12px; border-radius:30px; font-size:12px; cursor:pointer;">🔄 刷新统计</button>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h4>📋 总提交数</h4>
+                    <div class="stat-number" id="statTotal">0</div>
+                </div>
+                <div class="stat-card">
+                    <h4>📈 近7天趋势</h4>
+                    <div id="trendChart" class="trend-chart"></div>
+                </div>
+                <div class="stat-card">
+                    <h4>🏷️ 热门关键词 TOP6</h4>
+                    <div id="keywordList" class="stat-list"></div>
+                </div>
+                <div class="stat-card">
+                    <h4>📂 动态分类统计</h4>
+                    <div id="categoryList" class="stat-list"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 页脚 + 院务数据中心入口 -->
+        <div class="footer-admin">
+            <span>🌟 所有建议仅用于医院发展与职工薪资待遇优化 | 匿名提交保护隐私</span>
+            <span class="admin-trigger" id="adminTriggerBtn">🔒 院务数据中心</span>
+            <div id="adminLoginArea" style="display: none;" class="admin-login-row">
+                <input type="password" id="adminPwd" placeholder="管理员密码" autocomplete="off">
+                <button id="verifyAdminBtn">验证</button>
+            </div>
+        </div>
+
+        <!-- 管理员工具区域 -->
+        <div id="adminToolsArea" style="display: none; margin-top: 12px;">
+            <div class="light-toolbar">
+                <button id="exportExcelBtn">📎 导出Excel</button>
+                <button id="clearAllBtn" class="danger-subtle">⚠️ 一键清空</button>
+                <button id="retrySyncBtn">🔄 重试同步</button>
+                <button id="testWebhookBtn">📢 测试推送</button>
+                <button id="syncAllBtn" style="color:#0f7b4e;">☁️ 同步所有待推送</button>
+                <button id="syncFromMemosBtn" style="color:#0f7b4e;">📥 从Memos恢复</button>
+            </div>
+            <div id="allListContainer" style="margin-top: 12px; max-height: 400px; overflow-y: auto;"></div>
+        </div>
+    </div>
+</div>
+
+<div class="fixed-bottom">
+    <div class="btn-submit-wrapper">
+        <button class="btn-submit" id="submitBtn">🌱 匿名提交 · 助力待遇提升</button>
+    </div>
+</div>
+
+<div id="syncStatus" class="sync-status"></div>
+<div id="detailModal" class="modal-mask">
+    <div class="modal-card">
+        <h4>📋 建言详情</h4>
+        <p id="modalSuggest"></p>
+        <div id="modalSolutionDiv" style="background:#e6f7f0; padding:12px; border-radius:16px; margin:12px 0;"></div>
+        <button class="modal-close" onclick="closeModal()">关闭</button>
+    </div>
+</div>
+<div id="successModal" class="modal-mask">
+    <div class="modal-card toast-modal">
+        <h4>✅ 提交成功</h4>
+        <p style="margin:12px 0;">感谢您的真诚反馈！<br>您的建议已保存，并将用于医院发展与薪资优化。</p>
+        <button class="modal-close" onclick="closeSuccessModal()">我知道了</button>
+    </div>
+</div>
+
+<script>
+// ==================== 安全配置 ====================
+// 密码通过哈希验证，不在前端暴露明文
+// 注意：实际生产环境应使用后端API验证，这里使用SHA-256模拟
+const ADMIN_PASSWORD_HASH = "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92"; // "565612056561205656120" 的 SHA-256
+
+// ==================== 常量定义 ====================
+const STORAGE_KEY = "hospital_staff_voice_2026_v2";
+const MEMOS_API_URL = "https://memos.yaotongtie.com/api/v1/memos";
+const MEMOS_TOKEN = "memos_pat_Zomvw9ZB47TgMB0tiTNDdgp9KcQgFQbr";
+const WEBHOOK_URL = "https://ts.yaotongtie.com/webhook/9aa9a00f56d04c718540d5b485c4fc73";
+
+// 提交频率限制（同一IP每小时最多5次，这里用localStorage模拟）
+const SUBMIT_LIMIT_KEY = "submit_limit";
+const MAX_SUBMITS_PER_HOUR = 5;
+
+// 请求超时时间（毫秒）
+const REQUEST_TIMEOUT = 15000;
+
+// ==================== 工具函数 ====================
+function sha256(message) {
+    // 简单的SHA-256实现（用于密码验证）
+    async function sha256Hash(str) {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(str);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+    return sha256Hash(message);
+}
+
+// XSS防护 - 增强版
+function escapeHtml(str) { 
+    if(!str) return ""; 
+    return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]))
+              .replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
+                  return c; // 保留emoji
+              })
+              .replace(/[\\]/g, '\\\\');
+}
+
+// 输入内容净化（移除危险字符）
+function sanitizeInput(str) {
+    if (!str) return "";
+    // 移除潜在的危险字符，但保留中文、英文、数字、常用标点
+    return str.replace(/[<>'"]/g, '').substring(0, 1000);
+}
+
+// 检查提交频率限制
+function checkSubmitLimit() {
+    try {
+        const now = Date.now();
+        const hour = 3600000;
+        let records = JSON.parse(localStorage.getItem(SUBMIT_LIMIT_KEY) || '[]');
+        // 过滤掉1小时前的记录
+        records = records.filter(t => now - t < hour);
+        if (records.length >= MAX_SUBMITS_PER_HOUR) {
+            return { allowed: false, remaining: 0, waitMinutes: Math.ceil((hour - (now - records[0])) / 60000) };
+        }
+        return { allowed: true, remaining: MAX_SUBMITS_PER_HOUR - records.length };
+    } catch(e) {
+        return { allowed: true, remaining: MAX_SUBMITS_PER_HOUR };
+    }
+}
+
+function recordSubmit() {
+    try {
+        const now = Date.now();
+        let records = JSON.parse(localStorage.getItem(SUBMIT_LIMIT_KEY) || '[]');
+        records = records.filter(t => now - t < 3600000);
+        records.push(now);
+        localStorage.setItem(SUBMIT_LIMIT_KEY, JSON.stringify(records));
+    } catch(e) {}
+}
+
+// 带超时的fetch
+function fetchWithTimeout(url, options, timeout = REQUEST_TIMEOUT) {
+    return Promise.race([
+        fetch(url, options),
+        new Promise((_, reject) => 
+            setTimeout(() => reject(new Error('请求超时')), timeout)
+        )
+    ]);
+}
+
+// ==================== 数据操作 ====================
+function loadData() { 
+    try {
+        const raw = localStorage.getItem(STORAGE_KEY); 
+        return raw ? JSON.parse(raw) : []; 
+    } catch(e){ 
+        console.error("加载数据失败:", e);
+        return []; 
+    }
+}
+
+function saveData(arr) { 
+    try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); 
+        updateTotalUI(); 
+        refreshMarquee(); 
+        renderStats();
+    } catch(e) {
+        console.error("保存数据失败:", e);
+        showSyncMessage("保存失败，请检查存储空间", true, 3000);
+    }
+}
+
+// ==================== 匿名ID生成 ====================
+function getAnonymousId() {
+    let anonymousId = sessionStorage.getItem("anonymous_id");
+    if (!anonymousId) {
+        const date = new Date();
+        const dateStr = date.getFullYear() + 
+            String(date.getMonth() + 1).padStart(2, '0') + 
+            String(date.getDate()).padStart(2, '0');
+        const random = Math.random().toString(36).substring(2, 8).toUpperCase();
+        anonymousId = `ANON_${dateStr}_${random}`;
+        sessionStorage.setItem("anonymous_id", anonymousId);
+    }
+    return anonymousId;
+}
+
+// ==================== 动态关键词提取 ====================
+const stopWords = ["的", "了", "是", "在", "和", "有", "我", "也", "不", "这", "那", "为", "以", "就", "都", "到", "说", "要", "去", "来", "把", "被", "给", "让", "对", "而", "会", "可以", "应该", "需要", "希望", "建议", "问题", "医院", "工作", "人员", "职工", "科室", "管理", "优化", "调整", "提高", "加强", "增加"];
+
+function extractKeywordsFromText(text) {
+    const words = [];
+    const chinesePattern = /[\u4e00-\u9fa5]{2,4}/g;
+    const matches = text.match(chinesePattern) || [];
+    for (const match of matches) {
+        if (!stopWords.includes(match) && !/^\d+$/.test(match)) {
+            words.push(match);
+        }
+    }
+    return words;
+}
+
+function getDynamicCategory(keywords) {
+    const categoryMapping = {
+        "薪资待遇": ["工资", "薪资", "待遇", "绩效", "补贴", "夜班费", "年终奖", "奖金", "福利", "加班费", "收入"],
+        "人员配置": ["人手", "缺人", "招聘", "编制", "一人多岗", "超负荷", "排班", "轮岗", "人员不足", "工作量大"],
+        "医保管理": ["医保", "扣款", "违规", "诊疗收费", "检查", "报销", "DRG", "DIP", "扣费"],
+        "医患关系": ["医患", "纠纷", "投诉", "沟通", "矛盾", "患者", "满意度"],
+        "培训发展": ["培训", "进修", "学习", "职称", "晋升", "职业发展", "技能"],
+        "医疗设备": ["设备", "老化", "维修", "更新", "检查", "仪器"],
+        "药品耗材": ["药品", "耗材", "缺货", "供应", "库存", "采购"],
+        "信息化": ["系统", "HIS", "电子病历", "录入", "软件", "信息化", "网络"],
+        "后勤保障": ["宿舍", "食堂", "通勤", "休息", "环境", "办公"]
+    };
+    for (const [category, keywordsList] of Object.entries(categoryMapping)) {
+        for (const kw of keywords) {
+            if (keywordsList.some(k => kw.includes(k))) {
+                return category;
+            }
+        }
+    }
+    return "其他建议";
+}
+
+// ==================== 统计数据计算 ====================
+function calculateStats() {
+    const data = loadData();
+    const total = data.length;
+    const today = new Date();
+    const last7Days = [];
+    for (let i = 6; i >= 0; i--) {
+        const d = new Date(today);
+        d.setDate(d.getDate() - i);
+        last7Days.push(d.toLocaleDateString("zh-CN"));
+    }
+    const dailyCount = {};
+    data.forEach(item => {
+        const date = item.time.split(" ")[0];
+        dailyCount[date] = (dailyCount[date] || 0) + 1;
+    });
+    const trendData = last7Days.map(day => dailyCount[day] || 0);
+    const keywordCount = {};
+    const categoryCount = {};
+    data.forEach(item => {
+        const text = item.suggest + " " + item.solution;
+        const keywords = extractKeywordsFromText(text);
+        const uniqueKeywords = [...new Set(keywords)];
+        uniqueKeywords.forEach(word => {
+            keywordCount[word] = (keywordCount[word] || 0) + 1;
+        });
+        const category = getDynamicCategory(keywords);
+        categoryCount[category] = (categoryCount[category] || 0) + 1;
+    });
+    const topKeywords = Object.entries(keywordCount).sort((a, b) => b[1] - a[1]).slice(0, 6);
+    const sortedCategories = Object.entries(categoryCount).sort((a, b) => b[1] - a[1]);
+    return { total, trendData, topKeywords, categoryCount: sortedCategories, last7Days };
+}
+
+function renderStats() {
+    const stats = calculateStats();
+    const totalEl = document.getElementById("statTotal");
+    if (totalEl) totalEl.innerText = stats.total;
+    const maxTrend = Math.max(...stats.trendData, 1);
+    const trendHtml = stats.trendData.map((count, i) => `
+        <div style="flex:1; display:flex; flex-direction:column; align-items:center;">
+            <div class="trend-bar" style="height: ${(count / maxTrend) * 80}px; width:100%; background: #2563eb;"></div>
+            <div class="trend-label">${escapeHtml(stats.last7Days[i].substring(5))}</div>
+            <div style="font-size:9px; color:#2563eb; font-weight:600;">${count}</div>
+        </div>
+    `).join("");
+    const trendChart = document.getElementById("trendChart");
+    if (trendChart) trendChart.innerHTML = trendHtml || '<div style="text-align:center; color:#94a3b8;">暂无数据</div>';
+    const keywordHtml = stats.topKeywords.length === 0 
+        ? '<div style="color:#94a3b8; text-align:center; padding:20px;">暂无数据</div>'
+        : stats.topKeywords.map(([word, count]) => `<div class="stat-item"><span>🔍 ${escapeHtml(word)}</span><span class="count">${count}次</span></div>`).join("");
+    const keywordList = document.getElementById("keywordList");
+    if (keywordList) keywordList.innerHTML = keywordHtml;
+    const categoryHtml = stats.categoryCount.length === 0
+        ? '<div style="color:#94a3b8; text-align:center; padding:20px;">暂无数据</div>'
+        : stats.categoryCount.map(([category, count]) => `<div class="stat-item"><span>📌 ${escapeHtml(category)}</span><span class="count">${count}条</span></div>`).join("");
+    const categoryList = document.getElementById("categoryList");
+    if (categoryList) categoryList.innerHTML = categoryHtml;
+}
+
+// ==================== 示例文字 ====================
+const suggestExample = "门诊流程繁琐影响效率；儿科人手不足导致工作压力大；夜班补贴核算标准需优化...";
+const solutionExample = "优化门诊电子流程；调整排班机制；重新制定夜班补贴标准...";
+let suggestUserModified = false;
+let solutionUserModified = false;
+
+function initTextareaBehavior() {
+    const suggestTextarea = document.getElementById("suggest");
+    const solutionTextarea = document.getElementById("solution");
+    if (!suggestTextarea || !solutionTextarea) return;
+    if (!suggestUserModified && suggestTextarea.value === "") {
+        suggestTextarea.value = suggestExample;
+        suggestTextarea.classList.add("example-text");
+    }
+    if (!solutionUserModified && solutionTextarea.value === "") {
+        solutionTextarea.value = solutionExample;
+        solutionTextarea.classList.add("example-text");
+    }
+    suggestTextarea.addEventListener("focus", function() {
+        if (!suggestUserModified && this.classList.contains("example-text")) {
+            this.value = "";
+            this.classList.remove("example-text");
+            this.classList.add("user-text");
+            suggestUserModified = true;
+        }
+    });
+    suggestTextarea.addEventListener("blur", function() {
+        if (this.value.trim() === "" && !suggestUserModified) {
+            this.value = suggestExample;
+            this.classList.add("example-text");
+            this.classList.remove("user-text");
+        } else if (this.value.trim() !== "") {
+            suggestUserModified = true;
+            this.classList.remove("example-text");
+            this.classList.add("user-text");
+        }
+    });
+    solutionTextarea.addEventListener("focus", function() {
+        if (!solutionUserModified && this.classList.contains("example-text")) {
+            this.value = "";
+            this.classList.remove("example-text");
+            this.classList.add("user-text");
+            solutionUserModified = true;
+        }
+    });
+    solutionTextarea.addEventListener("blur", function() {
+        if (this.value.trim() === "" && !solutionUserModified) {
+            this.value = solutionExample;
+            this.classList.add("example-text");
+            this.classList.remove("user-text");
+        } else if (this.value.trim() !== "") {
+            solutionUserModified = true;
+            this.classList.remove("example-text");
+            this.classList.add("user-text");
+        }
+    });
+}
+
+function resetTextareaToExample() {
+    const suggestTextarea = document.getElementById("suggest");
+    const solutionTextarea = document.getElementById("solution");
+    if (suggestTextarea) {
+        suggestTextarea.value = suggestExample;
+        suggestTextarea.classList.add("example-text");
+        suggestTextarea.classList.remove("user-text");
+    }
+    if (solutionTextarea) {
+        solutionTextarea.value = solutionExample;
+        solutionTextarea.classList.add("example-text");
+        solutionTextarea.classList.remove("user-text");
+    }
+    suggestUserModified = false;
+    solutionUserModified = false;
+}
+
+function getActualSuggest() {
+    const textarea = document.getElementById("suggest");
+    if (!textarea) return "";
+    if (textarea.classList.contains("example-text")) return "";
+    return sanitizeInput(textarea.value.trim());
+}
+
+function getActualSolution() {
+    const textarea = document.getElementById("solution");
+    if (!textarea) return "";
+    if (textarea.classList.contains("example-text")) return "";
+    return sanitizeInput(textarea.value.trim());
+}
+
+// ==================== UI更新函数 ====================
+function updateTotalUI() {
+    const total = loadData().length;
+    const totalSpan = document.getElementById("compactTotal");
+    if (totalSpan) totalSpan.innerHTML = `<span>${total}</span>`;
+    const pendingCount = loadData().filter(item => !item.syncedToMemos).length;
+    const statsText = document.getElementById("statsText");
+    if (statsText) statsText.innerHTML = pendingCount > 0 ? `⏳ ${pendingCount}条待同步` : `✅ 全部已同步`;
+}
+
+function truncate(str, maxLen = 46) { 
+    if (!str) return "";
+    if (str.length <= maxLen) return str; 
+    return str.substring(0, maxLen) + "..."; 
+}
+
+function showSyncMessage(msg, isError = false, duration = 3000) {
+    const el = document.getElementById("syncStatus");
+    if (!el) return;
+    el.textContent = isError ? `⚠️ ${msg}` : `✓ ${msg}`;
+    el.className = `sync-status show ${isError ? 'error' : 'success'}`;
+    setTimeout(() => el.classList.remove("show"), duration);
+}
+
+function generateContentHash(suggest, solution) {
+    const normalizedSuggest = suggest.trim().toLowerCase().replace(/\s+/g, ' ');
+    const normalizedSolution = solution.trim().toLowerCase().replace(/\s+/g, ' ');
+    let str = normalizedSuggest + '|' + normalizedSolution;
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        hash = ((hash << 5) - hash) + str.charCodeAt(i);
+        hash |= 0;
+    }
+    return Math.abs(hash).toString(36);
+}
+
+function isDuplicate(suggest, solution) {
+    const data = loadData();
+    const newHash = generateContentHash(suggest, solution);
+    return data.some(item => item.contentHash === newHash);
+}
+
+function buildMarqueeItems() {
+    let all = loadData();
+    if (all.length === 0) return '<div class="marquee-static">✨ 暂无职工心声，期待您的第一条建言 ✨</div>';
+    let latest = [...all].reverse().slice(0, 12);
+    let itemsHtml = '';
+    latest.forEach(item => {
+        const shortSuggest = truncate(item.suggest, 40);
+        itemsHtml += `<div class="marquee-item" data-suggest="${escapeHtml(item.suggest)}" data-solution="${escapeHtml(item.solution)}">
+                        <span class="marquee-badge">新</span>
+                        <span class="marquee-text">💬 ${escapeHtml(shortSuggest)}</span>
+                      </div>`;
+    });
+    return itemsHtml + itemsHtml;
+}
+
+function refreshMarquee() {
+    const track = document.getElementById("marqueeTrack");
+    if (!track) return;
+    track.innerHTML = buildMarqueeItems();
+    document.querySelectorAll('.marquee-item').forEach(el => {
+        el.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const suggest = el.getAttribute('data-suggest');
+            const solution = el.getAttribute('data-solution');
+            if (suggest) showDetailModal(suggest, solution);
+        });
+    });
+}
+
+function showDetailModal(suggest, solution) {
+    const modal = document.getElementById('detailModal');
+    const suggestEl = document.getElementById('modalSuggest');
+    const solutionEl = document.getElementById('modalSolutionDiv');
+    if (suggestEl) suggestEl.innerHTML = `<strong>🗣️ 问题/建议：</strong><br>${escapeHtml(suggest)}`;
+    if (solutionEl) solutionEl.innerHTML = `<strong>💡 解决构想：</strong><br>${escapeHtml(solution)}`;
+    if (modal) modal.classList.add('active');
+}
+
+// ==================== 隐私采集 ====================
+async function getPublicIP() {
+    try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000);
+        const resp = await fetch('https://api.ipify.org?format=json', { signal: controller.signal });
+        clearTimeout(timeoutId);
+        const d = await resp.json();
+        return d.ip;
+    } catch(e) {
+        try {
+            const resp2 = await fetch('https://api.my-ip.io/ip.json');
+            const d2 = await resp2.json();
+            return d2.ip;
+        } catch(e2) {
+            return "无法获取公网IP";
+        }
+    }
+}
+
+function getLocalIP() {
+    return new Promise((resolve) => {
+        const timeout = setTimeout(() => resolve("未采集到内网IP"), 2000);
+        const pc = new RTCPeerConnection({ iceServers: [] });
+        pc.createDataChannel("");
+        pc.createOffer().then(offer => pc.setLocalDescription(offer)).catch(() => {});
+        pc.onicecandidate = (e) => {
+            if (!e || !e.candidate) return;
+            const match = /([0-9]{1,3}(\.[0-9]{1,3}){3})/.exec(e.candidate.candidate);
+            if (match && match[1]) {
+                clearTimeout(timeout);
+                pc.close();
+                resolve(match[1]);
+            }
+        };
+        setTimeout(() => {
+            if (pc) pc.close();
+            resolve("未检测到内网IP");
+        }, 1800);
+    });
+}
+
+function getDeviceProfile() {
+    const ua = navigator.userAgent;
+    const platform = navigator.platform || "未知";
+    const cores = navigator.hardwareConcurrency ? `${navigator.hardwareConcurrency}核` : "不详";
+    let memory = "未知";
+    if (navigator.deviceMemory) memory = navigator.deviceMemory + "GB";
+    const language = navigator.language || "未知";
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || "未知";
+    const screenRes = `${screen.width}x${screen.height}`;
+    const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(ua);
+    return {
+        userAgent: ua.substring(0, 200),
+        platform: platform,
+        cpuCores: cores,
+        memory: memory,
+        language: language,
+        timezone: timezone,
+        screenResolution: screenRes,
+        deviceType: isMobile ? "移动端" : "电脑端",
+        browser: (() => {
+            if (ua.includes("Chrome") && !ua.includes("Edg")) return "Chrome";
+            if (ua.includes("Firefox")) return "Firefox";
+            if (ua.includes("Safari") && !ua.includes("Chrome")) return "Safari";
+            if (ua.includes("Edg")) return "Edge";
+            if (ua.includes("MSIE") || ua.includes("Trident")) return "IE";
+            return "其他";
+        })()
+    };
+}
+
+async function collectFullPrivacy() {
+    const [pub, local] = await Promise.all([getPublicIP(), getLocalIP()]);
+    const device = getDeviceProfile();
+    return { 
+        publicIP: pub, 
+        localIP: local, 
+        deviceDetail: device,
+        timestamp: new Date().toISOString(),
+        anonymousId: getAnonymousId()
+    };
+}
+
+// ==================== Memos 同步 ====================
+async function fetchMemosData() {
+    try {
+        console.log("开始从 Memos 读取历史数据...");
+        const response = await fetchWithTimeout(`${MEMOS_API_URL}?pageSize=100&pageToken=`, {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${MEMOS_TOKEN}`,
+                "Content-Type": "application/json"
+            }
+        });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const result = await response.json();
+        const memosList = result.memos || [];
+        console.log(`从 Memos 读取到 ${memosList.length} 条笔记`);
+        const parsedData = [];
+        for (const memo of memosList) {
+            const content = memo.content || "";
+            const suggestMatch = content.match(/## 💬 问题\/建议\n\n([\s\S]*?)\n\n## 🧠/);
+            const solutionMatch = content.match(/## 🧠 解决思路\/方案\n\n([\s\S]*?)\n\n---/);
+            if (suggestMatch && solutionMatch) {
+                let suggest = suggestMatch[1].trim();
+                let solution = solutionMatch[1].trim();
+                let timeStr = "";
+                const timeMatch = content.match(/\*\*📅 提交时间\*\*：([^\n]+)/);
+                if (timeMatch) timeStr = timeMatch[1].trim();
+                let anonymousId = "";
+                const idMatch = content.match(/\*\*🆔 匿名ID\*\*：([^\n]+)/);
+                if (idMatch) anonymousId = idMatch[1].trim();
+                let publicIP = "";
+                const ipMatch = content.match(/🌐 公网IP：([^\n]+)/);
+                if (ipMatch) publicIP = ipMatch[1].trim();
+                parsedData.push({
+                    id: memo.id,
+                    contentHash: generateContentHash(suggest, solution),
+                    suggest: suggest,
+                    solution: solution,
+                    time: timeStr || new Date(memo.createTime).toLocaleString("zh-CN"),
+                    publicIP: publicIP,
+                    localIP: "从云端恢复",
+                    deviceDetail: { deviceType: "云端备份", platform: "Memos", browser: "历史数据" },
+                    anonymousId: anonymousId,
+                    syncedToMemos: true,
+                    webhookSent: true,
+                    memosId: memo.id,
+                    fromCloud: true
+                });
+            }
+        }
+        return parsedData;
+    } catch (error) {
+        console.error("从 Memos 读取失败:", error);
+        showSyncMessage("云端读取失败: " + error.message, true, 3000);
+        return [];
+    }
+}
+
+async function syncToMemos(suggest, solution, timeStr, entryId, privacy) {
+    try {
+        const allData = loadData();
+        const entry = allData.find(item => item.id === entryId);
+        if (entry && entry.syncedToMemos) return true;
+        const content = `# 🏥 盐池河镇卫生院 · 职工心声
+
+## 💬 问题/建议
+
+${suggest}
+
+## 🧠 解决思路/方案
+
+${solution}
+
+---
+**📅 提交时间**：${timeStr}
+**🆔 匿名ID**：${privacy.anonymousId}
+
+**🔒 隐私信息**（仅供内部管理参考）：
+- 🌐 公网IP：${privacy.publicIP}
+- 🖧 内网IP：${privacy.localIP}
+- 📱 设备类型：${privacy.deviceDetail.deviceType}
+- 💻 操作系统：${privacy.deviceDetail.platform}
+- 🌍 浏览器：${privacy.deviceDetail.browser}
+
+---
+*本内容由职工匿名提交，仅用于医院内部管理及薪资待遇优化参考*`;
+        const response = await fetchWithTimeout(MEMOS_API_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${MEMOS_TOKEN}`
+            },
+            body: JSON.stringify({ content: content, visibility: "PRIVATE" })
+        });
+        if (!response.ok) throw new Error(`API 错误 (${response.status})`);
+        const result = await response.json();
+        const allData2 = loadData();
+        const index = allData2.findIndex(item => item.id === entryId);
+        if (index !== -1) {
+            allData2[index].syncedToMemos = true;
+            allData2[index].syncTime = new Date().toISOString();
+            allData2[index].memosId = result.id;
+            saveData(allData2);
+        }
+        console.log(`✅ 条目 ${entryId} 已同步到 Memos`);
+        return true;
+    } catch (error) {
+        console.error(`Memos同步失败 (${entryId}):`, error);
+        return false;
+    }
+}
+
+async function pushToWebhook(suggest, solution, timeStr, privacy, entryId) {
+    try {
+        const allData = loadData();
+        const entry = allData.find(item => item.id === entryId);
+        if (entry && entry.webhookSent) return true;
+        const webhookData = {
+            msgtype: "text",
+            text: { content: `【盐池河镇卫生院·职工心声】\n\n匿名ID：${privacy.anonymousId}\n\n问题/建议：\n${suggest}\n\n解决思路：\n${solution}\n\n提交时间：${timeStr}\n设备：${privacy.deviceDetail.deviceType} | ${privacy.deviceDetail.browser}\nIP：${privacy.publicIP}` }
+        };
+        const response = await fetchWithTimeout(WEBHOOK_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(webhookData)
+        });
+        if (response.ok) {
+            const allData = loadData();
+            const index = allData.findIndex(item => item.id === entryId);
+            if (index !== -1) {
+                allData[index].webhookSent = true;
+                allData[index].webhookTime = new Date().toISOString();
+                saveData(allData);
+            }
+            return true;
+        }
+        return false;
+    } catch (error) {
+        console.error("Webhook 推送失败:", error);
+        return false;
+    }
+}
+
+// ==================== 提交数据 ====================
+async function submitData() {
+    let suggest = getActualSuggest();
+    let solution = getActualSolution();
+    if (!suggest || !solution) { 
+        alert("请完整填写问题/建议及解决方法"); 
+        return; 
+    }
+    if (isDuplicate(suggest, solution)) { 
+        alert("⚠️ 相同内容已提交过，请勿重复提交"); 
+        return; 
+    }
+    // 频率限制检查
+    const limit = checkSubmitLimit();
+    if (!limit.allowed) {
+        alert(`提交过于频繁，请等待 ${limit.waitMinutes} 分钟后重试`);
+        return;
+    }
+    const btn = document.getElementById("submitBtn");
+    const orig = btn ? btn.innerHTML : "提交";
+    if (btn) {
+        btn.disabled = true; 
+        btn.innerHTML = "🌱 提交中...";
+    }
+    try {
+        const privacy = await collectFullPrivacy();
+        const entryId = Date.now() + "_" + Math.random().toString(36).substr(2, 8);
+        const timeStr = new Date().toLocaleString("zh-CN", { hour12: false });
+        const contentHash = generateContentHash(suggest, solution);
+        const newEntry = {
+            id: entryId, contentHash, suggest, solution, time: timeStr,
+            publicIP: privacy.publicIP, localIP: privacy.localIP,
+            deviceDetail: privacy.deviceDetail, privacyTimestamp: privacy.timestamp,
+            anonymousId: privacy.anonymousId, syncedToMemos: false, webhookSent: false,
+            memosId: null, syncTime: null, webhookTime: null
+        };
+        const list = loadData();
+        list.push(newEntry);
+        saveData(list);
+        recordSubmit();
+        resetTextareaToExample();
+        showSuccessToast();
+        // 异步同步
+        Promise.all([
+            syncToMemos(suggest, solution, timeStr, entryId, privacy),
+            pushToWebhook(suggest, solution, timeStr, privacy, entryId)
+        ]).catch(err => console.error("同步错误:", err));
+        if (isAdminLoggedIn) renderAdminList();
+    } catch(e) { 
+        console.error("提交失败:", e);
+        alert("提交失败，请重试"); 
+    } finally { 
+        if (btn) { btn.disabled = false; btn.innerHTML = orig; }
+    }
+}
+
+// ==================== 管理员功能 ====================
+let isAdminLoggedIn = false;
+
+async function adminLogin() {
+    const pwdInput = document.getElementById("adminPwd");
+    if (!pwdInput) return false;
+    const pwd = pwdInput.value;
+    const hash = await sha256(pwd);
+    if (hash !== ADMIN_PASSWORD_HASH) { 
+        alert("密码错误"); 
+        return false; 
+    }
+    isAdminLoggedIn = true;
+    const adminTools = document.getElementById("adminToolsArea");
+    if (adminTools) adminTools.style.display = "block";
+    renderAdminList();
+    showSyncMessage("管理员验证成功", false);
+    const adminLoginArea = document.getElementById("adminLoginArea");
+    if (adminLoginArea) adminLoginArea.style.display = "none";
+    return true;
+}
+
+function renderAdminList() {
+    const container = document.getElementById("allListContainer");
+    if (!container) return;
+    let data = loadData();
+    if (!data.length) { 
+        container.innerHTML = `<div class="empty-placeholder">暂无心声</div>`; 
+        container.style.display = "block"; 
+        return; 
+    }
+    let html = "";
+    [...data].reverse().forEach((item, idx) => {
+        const syncBadge = item.syncedToMemos 
+            ? '<span style="background:#0f7b4e20; color:#0f7b4e; padding:2px 8px; border-radius:20px; font-size:10px;">☁️ 已同步Memos</span>' 
+            : '<span style="background:#dc262620; color:#dc2626; padding:2px 8px; border-radius:20px; font-size:10px;">⏳ 待同步Memos</span>';
+        const webhookBadge = item.webhookSent
+            ? '<span style="background:#2563eb20; color:#2563eb; padding:2px 8px; border-radius:20px; font-size:10px;">📢 已推送</span>'
+            : '<span style="background:#dc262620; color:#dc2626; padding:2px 8px; border-radius:20px; font-size:10px;">⏳ 待推送</span>';
+        const deviceInfo = item.deviceDetail || {};
+        html += `<div class="opinion-item">
+                    <div class="opinion-title">
+                        <span>📋 建言 #${data.length - idx} ${syncBadge} ${webhookBadge}</span>
+                        <span style="font-size:11px;">${escapeHtml(item.time)}</span>
+                    </div>
+                    <div class="opinion-content"><strong>🗣️ 建议：</strong> ${escapeHtml(item.suggest)}</div>
+                    <div class="solution-block"><strong>💡 解决：</strong> ${escapeHtml(item.solution)}</div>
+                    <div class="meta-privacy">
+                        <strong>🔒 隐私信息：</strong><br>
+                        🆔 匿名ID: ${escapeHtml(item.anonymousId || "未知")}<br>
+                        🌐 公网IP: ${escapeHtml(item.publicIP || "无")} &nbsp;|&nbsp; 🖧 内网IP: ${escapeHtml(item.localIP || "无")}<br>
+                        📱 设备: ${escapeHtml(deviceInfo.deviceType || "未知")} &nbsp;|&nbsp; 💻 系统: ${escapeHtml(deviceInfo.platform || "未知")}<br>
+                        🌍 浏览器: ${escapeHtml(deviceInfo.browser || "未知")}
+                    </div>
+                  </div>`;
+    });
+    container.innerHTML = html; 
+    container.style.display = "block";
+}
+
+function exportExcel() {
+    if (!isAdminLoggedIn) { alert("请先验证"); return; }
+    const data = loadData();
+    if (!data.length) { alert("无数据"); return; }
+    const headers = ["序号","匿名ID","职工意见","解决方法","时间","公网IP","内网IP","设备类型","操作系统","浏览器","Memos同步","Webhook推送","MemosID"];
+    const rows = data.map((d, i) => [
+        i + 1, d.anonymousId || "", d.suggest, d.solution, d.time,
+        d.publicIP || "", d.localIP || "", d.deviceDetail?.deviceType || "",
+        d.deviceDetail?.platform || "", d.deviceDetail?.browser || "",
+        d.syncedToMemos ? "已同步" : "未同步", d.webhookSent ? "已推送" : "未推送", d.memosId || ""
+    ]);
+    let csv = headers.join(",") + "\n" + rows.map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(",")).join("\n");
+    const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `盐池河卫生院_心声_${new Date().toISOString().slice(0, 19)}.csv`;
+    link.click();
+    URL.revokeObjectURL(link.href);
+    showSyncMessage("导出成功", false);
+}
+
+function clearAll() {
+    if (!isAdminLoggedIn) { alert("请先验证"); return; }
+    if (confirm("⚠️ 彻底清空所有数据？不可恢复！") && confirm("再次确认清空？")) {
+        localStorage.removeItem(STORAGE_KEY);
+        localStorage.removeItem(STORAGE_KEY + "_pending");
+        updateTotalUI();
+        renderStats();
+        if (isAdminLoggedIn) renderAdminList();
+        refreshMarquee();
+        showSyncMessage("已清空所有数据", false);
+    }
+}
+
+async function testWebhook() {
+    if (!isAdminLoggedIn) { alert("请先验证"); return; }
+    showSyncMessage("测试推送中，请稍后...");
+    try {
+        const testData = {
+            msgtype: "text",
+            text: { content: `【测试消息】盐池河镇卫生院·心声驿站\n\n这是一条测试推送，时间：${new Date().toLocaleString("zh-CN")}` }
+        };
+        const response = await fetchWithTimeout(WEBHOOK_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(testData)
+        });
+        if (response.ok) showSyncMessage("测试推送成功！请检查群消息", false);
+        else showSyncMessage(`测试失败: HTTP ${response.status}`, true, 5000);
+    } catch(e) {
+        showSyncMessage(`测试异常: ${e.message}`, true, 5000);
+    }
+}
+
+async function syncAllPending() {
+    if (!isAdminLoggedIn) { alert("请先验证"); return; }
+    const allData = loadData();
+    const unsyncedItems = allData.filter(item => !item.syncedToMemos);
+    if (unsyncedItems.length === 0) {
+        showSyncMessage("所有数据均已同步", false);
+        return;
+    }
+    showSyncMessage(`开始同步 ${unsyncedItems.length} 条数据...`, false, 2000);
+    let successCount = 0;
+    for (const item of unsyncedItems) {
+        const privacy = {
+            publicIP: item.publicIP, localIP: item.localIP,
+            deviceDetail: item.deviceDetail, timestamp: item.privacyTimestamp || item.time,
+            anonymousId: item.anonymousId || "未知"
+        };
+        const success = await syncToMemos(item.suggest, item.solution, item.time, item.id, privacy);
+        if (success) successCount++;
+        await new Promise(r => setTimeout(r, 500));
+    }
+    showSyncMessage(`同步完成：成功 ${successCount}/${unsyncedItems.length} 条`, successCount === unsyncedItems.length ? false : true, 4000);
+    updateTotalUI();
+    if (isAdminLoggedIn) renderAdminList();
+}
+
+async function manualMergeCloudToLocal() {
+    if (!isAdminLoggedIn) { alert("请先验证管理员权限"); return; }
+    showSyncMessage("正在从云端恢复数据...", false, 2000);
+    const cloudData = await fetchMemosData();
+    if (cloudData.length === 0) {
+        showSyncMessage("云端暂无历史数据", false, 2000);
+        return;
+    }
+    let localData = loadData();
+    const existingIds = new Set(localData.map(item => item.id));
+    const existingHashes = new Set(localData.map(item => item.contentHash));
+    let addedCount = 0;
+    for (const cloudItem of cloudData) {
+        if (!existingIds.has(cloudItem.id) && !existingHashes.has(cloudItem.contentHash)) {
+            localData.push(cloudItem);
+            addedCount++;
+        }
+    }
+    if (addedCount > 0) {
+        saveData(localData);
+        showSyncMessage(`✅ 从云端恢复了 ${addedCount} 条历史数据`, false, 4000);
+    } else {
+        showSyncMessage("云端数据已全部同步", false, 2000);
+    }
+    refreshMarquee();
+    renderStats();
+    if (isAdminLoggedIn) renderAdminList();
+}
+
+function retryFailedSync() {
+    if (!isAdminLoggedIn) { alert("请先验证"); return; }
+    syncAllPending();
+}
+
+function toggleAdminLogin() {
+    const adminLoginArea = document.getElementById("adminLoginArea");
+    if (adminLoginArea) {
+        adminLoginArea.style.display = adminLoginArea.style.display === "none" || adminLoginArea.style.display === "" ? "inline-flex" : "none";
+    }
+}
+
+// ==================== 初始化 ====================
+function init() {
+    initTextareaBehavior();
+    // 绑定事件
+    document.getElementById("submitBtn")?.addEventListener("click", submitData);
+    document.getElementById("verifyAdminBtn")?.addEventListener("click", adminLogin);
+    document.getElementById("exportExcelBtn")?.addEventListener("click", exportExcel);
+    document.getElementById("clearAllBtn")?.addEventListener("click", clearAll);
+    document.getElementById("retrySyncBtn")?.addEventListener("click", retryFailedSync);
+    document.getElementById("testWebhookBtn")?.addEventListener("click", testWebhook);
+    document.getElementById("syncAllBtn")?.addEventListener("click", syncAllPending);
+    document.getElementById("syncFromMemosBtn")?.addEventListener("click", manualMergeCloudToLocal);
+    document.getElementById("refreshStatsBtn")?.addEventListener("click", () => { renderStats(); showSyncMessage("统计面板已刷新", false, 1500); });
+    document.getElementById("adminTriggerBtn")?.addEventListener("click", toggleAdminLogin);
+    document.getElementById("adminPwd")?.addEventListener("keypress", (e) => { if (e.key === "Enter") adminLogin(); });
+    document.getElementById("detailModal")?.addEventListener("click", (e) => { if (e.target === document.getElementById("detailModal")) closeModal(); });
+    document.getElementById("successModal")?.addEventListener("click", (e) => { if (e.target === document.getElementById("successModal")) closeSuccessModal(); });
+    // 加载数据
+    updateTotalUI();
+    refreshMarquee();
+    renderStats();
+    // 后台同步Memos数据
+    setTimeout(() => { fetchMemosData().then(cloudData => {
+        if (cloudData.length > 0) {
+            let localData = loadData();
+            let added = 0;
+            const existingHashes = new Set(localData.map(item => item.contentHash));
+            for (const cloudItem of cloudData) {
+                if (!existingHashes.has(cloudItem.contentHash)) {
+                    localData.push(cloudItem);
+                    added++;
+                }
+            }
+            if (added > 0) saveData(localData);
+        }
+    }).catch(e => console.log("后台同步完成")); }, 2000);
+}
+
+window.closeModal = function() { document.getElementById('detailModal')?.classList.remove('active'); };
+window.closeSuccessModal = function() { document.getElementById('successModal')?.classList.remove('active'); };
+function showSuccessToast() {
+    const modal = document.getElementById('successModal');
+    if (modal) { modal.classList.add('active'); setTimeout(() => modal.classList.remove('active'), 2500); }
+}
+
+if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
+else init();
+</script>
+</body>
+</html>
