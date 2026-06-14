@@ -746,7 +746,7 @@ const WEBHOOK_URL = "https://ts.yaotongtie.com/webhook/9aa9a00f56d04c718540d5b48
 const SUBMIT_LIMIT_KEY = "submit_limit";
 const MAX_SUBMITS_PER_HOUR = 5;
 const REQUEST_TIMEOUT = 15000;
-const SYNC_INTERVAL = 30000; // 30秒自动同步一次
+const SYNC_INTERVAL = 15000; // 15秒自动同步一次
 
 let isAdminLoggedIn = false;
 let syncTimer = null;
@@ -1150,127 +1150,169 @@ async function collectFullPrivacy() {
     };
 }
 
-// ==================== Memos 同步（核心：双向同步） ====================
-async function fetchMemosData() {
+// ==================== Memos API 调用 ====================
+// 获取所有 Memos 笔记（使用正确的 API 格式）
+async function fetchAllMemos() {
     try {
-        console.log("开始从 Memos 读取历史数据...");
-        const response = await fetchWithTimeout(`${MEMOS_API_URL}?pageSize=100&pageToken=`, {
+        console.log("🔍 开始从 Memos 读取数据...");
+        
+        // Memos v0.22+ API 格式：GET /api/v1/memos?pageSize=100
+        const response = await fetchWithTimeout(`${MEMOS_API_URL}?pageSize=100`, {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${MEMOS_TOKEN}`,
                 "Content-Type": "application/json"
             }
         });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        const result = await response.json();
-        const memosList = result.memos || [];
-        console.log(`从 Memos 读取到 ${memosList.length} 条笔记`);
         
-        // 提取云端笔记的ID集合
-        const cloudMemoIds = new Set();
-        const parsedData = [];
-        
-        for (const memo of memosList) {
-            cloudMemoIds.add(memo.id);
-            const content = memo.content || "";
-            const suggestMatch = content.match(/## 💬 问题\/建议\n\n([\s\S]*?)\n\n## 🧠/);
-            const solutionMatch = content.match(/## 🧠 解决思路\/方案\n\n([\s\S]*?)\n\n---/);
-            if (suggestMatch && solutionMatch) {
-                let suggest = suggestMatch[1].trim();
-                let solution = solutionMatch[1].trim();
-                let timeStr = "";
-                const timeMatch = content.match(/\*\*📅 提交时间\*\*：([^\n]+)/);
-                if (timeMatch) timeStr = timeMatch[1].trim();
-                let anonymousId = "";
-                const idMatch = content.match(/\*\*🆔 匿名ID\*\*：([^\n]+)/);
-                if (idMatch) anonymousId = idMatch[1].trim();
-                let publicIP = "";
-                const ipMatch = content.match(/🌐 公网IP：([^\n]+)/);
-                if (ipMatch) publicIP = ipMatch[1].trim();
-                parsedData.push({
-                    id: memo.id,
-                    contentHash: generateContentHash(suggest, solution),
-                    suggest: suggest,
-                    solution: solution,
-                    time: timeStr || new Date(memo.createTime).toLocaleString("zh-CN"),
-                    publicIP: publicIP,
-                    localIP: "从云端恢复",
-                    deviceDetail: { deviceType: "云端备份", platform: "Memos", browser: "历史数据" },
-                    anonymousId: anonymousId,
-                    syncedToMemos: true,
-                    webhookSent: true,
-                    memosId: memo.id,
-                    fromCloud: true
-                });
-            }
+        if (!response.ok) {
+            console.error(`HTTP 错误: ${response.status}`);
+            return [];
         }
         
-        return { cloudData: parsedData, cloudMemoIds };
+        const result = await response.json();
+        console.log("📡 API 响应:", result);
+        
+        // 兼容不同的响应格式
+        let memosList = [];
+        if (result.memos && Array.isArray(result.memos)) {
+            memosList = result.memos;
+        } else if (result.data && Array.isArray(result.data)) {
+            memosList = result.data;
+        } else if (Array.isArray(result)) {
+            memosList = result;
+        }
+        
+        console.log(`📋 从 Memos 读取到 ${memosList.length} 条笔记`);
+        return memosList;
     } catch (error) {
-        console.error("从 Memos 读取失败:", error);
-        return { cloudData: [], cloudMemoIds: new Set() };
+        console.error("❌ 从 Memos 读取失败:", error);
+        return [];
     }
 }
 
-// 全量同步：合并云端数据，删除本地中已从云端删除的条目
+// 解析 Memos 内容，提取建言信息
+function parseMemosContent(memo) {
+    try {
+        const content = memo.content || "";
+        
+        // 检查是否是本系统生成的笔记（包含特定标题）
+        if (!content.includes("🏥 盐池河镇卫生院 · 职工心声")) {
+            return null;
+        }
+        
+        // 提取问题/建议
+        const suggestMatch = content.match(/## 💬 问题\/建议\n\n([\s\S]*?)\n\n## 🧠/);
+        // 提取解决思路
+        const solutionMatch = content.match(/## 🧠 解决思路\/方案\n\n([\s\S]*?)\n\n---/);
+        // 提取时间
+        const timeMatch = content.match(/\*\*📅 提交时间\*\*：([^\n]+)/);
+        // 提取匿名ID
+        const idMatch = content.match(/\*\*🆔 匿名ID\*\*：([^\n]+)/);
+        // 提取IP
+        const ipMatch = content.match(/🌐 公网IP：([^\n]+)/);
+        
+        if (suggestMatch && solutionMatch) {
+            return {
+                id: memo.id,
+                memosId: memo.id,
+                suggest: suggestMatch[1].trim(),
+                solution: solutionMatch[1].trim(),
+                time: timeMatch ? timeMatch[1].trim() : new Date(memo.createTime).toLocaleString("zh-CN"),
+                anonymousId: idMatch ? idMatch[1].trim() : "未知",
+                publicIP: ipMatch ? ipMatch[1].trim() : "未知",
+                localIP: "从云端恢复",
+                deviceDetail: { deviceType: "云端备份", platform: "Memos", browser: "历史数据" },
+                syncedToMemos: true,
+                webhookSent: true,
+                fromCloud: true
+            };
+        }
+        return null;
+    } catch (e) {
+        console.error("解析 Memos 内容失败:", e);
+        return null;
+    }
+}
+
+// 全量同步：以云端为准，本地完全同步为云端镜像
 async function fullSyncFromMemos(showMessage = false) {
     try {
         if (showMessage) showSyncMessage("正在同步云端数据...", false, 2000);
         
-        const { cloudData, cloudMemoIds } = await fetchMemosData();
-        let localData = loadData();
+        // 1. 从云端获取所有笔记
+        const memosList = await fetchAllMemos();
+        const cloudItems = [];
+        const cloudMemoIds = new Set();
         
-        // 1. 删除本地中已在云端删除的条目（且不是本地新增未同步的）
-        const localIdsToKeep = localData.filter(item => {
-            // 如果已经同步到云端，但云端没有这个ID，则删除
-            if (item.syncedToMemos && item.memosId && !cloudMemoIds.has(item.memosId)) {
-                console.log(`删除已从云端移除的条目: ${item.memosId}`);
-                return false;
+        for (const memo of memosList) {
+            cloudMemoIds.add(memo.id);
+            const parsed = parseMemosContent(memo);
+            if (parsed) {
+                // 生成内容哈希用于去重
+                parsed.contentHash = generateContentHash(parsed.suggest, parsed.solution);
+                cloudItems.push(parsed);
             }
-            return true;
-        });
+        }
         
-        // 2. 合并云端新数据（去重）
-        const existingIds = new Set(localIdsToKeep.map(item => item.id));
-        const existingHashes = new Set(localIdsToKeep.map(item => item.contentHash));
+        console.log(`☁️ 云端有效笔记: ${cloudItems.length} 条`);
         
-        let addedCount = 0;
-        for (const cloudItem of cloudData) {
-            if (!existingIds.has(cloudItem.id) && !existingHashes.has(cloudItem.contentHash)) {
-                localIdsToKeep.push(cloudItem);
-                addedCount++;
-            } else {
-                // 更新本地已存在但标记未同步的条目
-                const existingIndex = localIdsToKeep.findIndex(item => item.contentHash === cloudItem.contentHash);
-                if (existingIndex !== -1 && !localIdsToKeep[existingIndex].syncedToMemos) {
-                    localIdsToKeep[existingIndex].syncedToMemos = true;
-                    localIdsToKeep[existingIndex].memosId = cloudItem.memosId;
-                    localIdsToKeep[existingIndex].id = cloudItem.id;
-                    console.log(`更新本地条目同步状态: ${cloudItem.id}`);
+        // 2. 获取本地数据
+        let localData = loadData();
+        console.log(`💻 本地数据: ${localData.length} 条`);
+        
+        // 3. 以云端为准，构建新的本地数据
+        const newLocalData = [];
+        const processedHashes = new Set();
+        
+        // 3a. 先添加所有云端数据
+        for (const cloudItem of cloudItems) {
+            newLocalData.push(cloudItem);
+            processedHashes.add(cloudItem.contentHash);
+        }
+        
+        // 3b. 添加本地新增但尚未同步到云端的数据
+        let localOnlyCount = 0;
+        for (const localItem of localData) {
+            // 如果本地条目没有同步到云端（没有 memosId 或 syncedToMemos 为 false）
+            if (!localItem.syncedToMemos && !localItem.memosId) {
+                if (!processedHashes.has(localItem.contentHash)) {
+                    newLocalData.push(localItem);
+                    processedHashes.add(localItem.contentHash);
+                    localOnlyCount++;
+                    console.log(`📝 保留本地新增条目: ${localItem.id.substring(0, 8)}...`);
                 }
             }
         }
         
-        // 3. 按时间排序
-        localIdsToKeep.sort((a, b) => new Date(a.time) - new Date(b.time));
+        // 4. 按时间排序
+        newLocalData.sort((a, b) => new Date(a.time) - new Date(b.time));
         
-        // 4. 保存
-        if (addedCount > 0 || localIdsToKeep.length !== localData.length) {
-            saveData(localIdsToKeep);
+        // 5. 计算变化
+        const addedCount = cloudItems.length - (localData.filter(item => item.syncedToMemos).length);
+        const deletedCount = localData.filter(item => item.syncedToMemos && !cloudMemoIds.has(item.memosId)).length;
+        
+        console.log(`📊 同步统计: 云端新增 ${addedCount} 条, 云端删除 ${deletedCount} 条, 本地新增 ${localOnlyCount} 条`);
+        
+        // 6. 保存
+        if (addedCount !== 0 || deletedCount !== 0 || localOnlyCount !== 0) {
+            saveData(newLocalData);
             if (showMessage) {
-                showSyncMessage(`✅ 同步完成：新增 ${addedCount} 条，删除 ${localData.length - localIdsToKeep.length} 条`, false, 4000);
-            } else {
-                console.log(`后台同步：新增 ${addedCount} 条，删除 ${localData.length - localIdsToKeep.length} 条`);
+                let msg = `同步完成`;
+                if (addedCount > 0) msg += `，新增 ${addedCount} 条`;
+                if (deletedCount > 0) msg += `，删除 ${deletedCount} 条`;
+                if (localOnlyCount > 0) msg += `，本地 ${localOnlyCount} 条待同步`;
+                showSyncMessage(`✅ ${msg}`, false, 4000);
             }
         } else if (showMessage) {
             showSyncMessage("云端数据已是最新", false, 2000);
         }
         
-        return { added: addedCount, removed: localData.length - localIdsToKeep.length };
+        return { added: addedCount, removed: deletedCount, localOnly: localOnlyCount };
     } catch (error) {
-        console.error("同步失败:", error);
+        console.error("❌ 同步失败:", error);
         if (showMessage) showSyncMessage("同步失败: " + error.message, true, 3000);
-        return { added: 0, removed: 0 };
+        return { added: 0, removed: 0, localOnly: 0 };
     }
 }
 
@@ -1278,17 +1320,17 @@ async function fullSyncFromMemos(showMessage = false) {
 function startAutoSync() {
     if (syncTimer) clearInterval(syncTimer);
     syncTimer = setInterval(async () => {
-        console.log("自动同步检查...");
+        console.log("🔄 自动同步检查...");
         await fullSyncFromMemos(false);
     }, SYNC_INTERVAL);
-    console.log(`已启动自动同步，间隔 ${SYNC_INTERVAL / 1000} 秒`);
+    console.log(`✅ 已启动自动同步，间隔 ${SYNC_INTERVAL / 1000} 秒`);
 }
 
 function stopAutoSync() {
     if (syncTimer) {
         clearInterval(syncTimer);
         syncTimer = null;
-        console.log("已停止自动同步");
+        console.log("⏹️ 已停止自动同步");
     }
 }
 
@@ -1341,12 +1383,13 @@ ${solution}
             allData2[index].syncedToMemos = true;
             allData2[index].syncTime = new Date().toISOString();
             allData2[index].memosId = result.id;
+            allData2[index].id = result.id;
             saveData(allData2);
         }
-        console.log(`✅ 条目 ${entryId} 已同步到 Memos`);
+        console.log(`✅ 条目已同步到 Memos，ID: ${result.id}`);
         return true;
     } catch (error) {
-        console.error(`Memos同步失败 (${entryId}):`, error);
+        console.error(`❌ Memos同步失败:`, error);
         return false;
     }
 }
@@ -1650,9 +1693,10 @@ function init() {
     
     // 首次全量同步（静默）
     setTimeout(async () => {
-        await fullSyncFromMemos(false);
+        console.log("🚀 执行首次同步...");
+        await fullSyncFromMemos(true);
         startAutoSync(); // 启动定时同步
-    }, 2000);
+    }, 3000);
 }
 
 window.closeModal = function() { document.getElementById('detailModal')?.classList.remove('active'); };
