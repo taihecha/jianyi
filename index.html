@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>盐池河镇卫生院 · 职工心声驿站 | 紧凑满屏版</title>
     <style>
-        /* ==================== 基础样式 ==================== */
         * {
             margin: 0;
             padding: 0;
@@ -46,7 +45,6 @@
             padding-bottom: 20px;
         }
 
-        /* ==================== 颜色变量 ==================== */
         :root {
             --hero-teal: #0f766e;
             --primary-red: #dc2626;
@@ -62,7 +60,6 @@
             --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.04);
         }
 
-        /* ==================== 头部样式 ==================== */
         .hero {
             background: var(--hero-teal);
             border-radius: 24px;
@@ -98,7 +95,6 @@
             max-width: 85%;
         }
 
-        /* ==================== 动态卡片样式 ==================== */
         .dynamic-card {
             background: var(--neutral-bg);
             border-radius: 24px;
@@ -158,7 +154,6 @@
             font-size: 13px;
         }
 
-        /* ==================== 跑马灯样式 ==================== */
         .marquee-container {
             background: var(--deep-blue-light);
             border-radius: 48px;
@@ -216,7 +211,6 @@
             font-size: 13px;
         }
 
-        /* ==================== 表单卡片样式 ==================== */
         .card {
             background: var(--neutral-bg);
             border-radius: 24px;
@@ -303,7 +297,6 @@
             margin-left: 8px;
         }
 
-        /* ==================== 统计面板样式 ==================== */
         .stats-panel {
             background: var(--neutral-bg);
             border-radius: 24px;
@@ -392,7 +385,6 @@
             color: #64748b;
         }
 
-        /* ==================== 页脚样式 ==================== */
         .footer-admin {
             display: flex;
             align-items: center;
@@ -510,7 +502,6 @@
             color: #94a3b8;
         }
 
-        /* ==================== 底部按钮 ==================== */
         .fixed-bottom {
             background: #f1f5f9;
             padding: 14px 24px 22px 24px;
@@ -547,7 +538,6 @@
             cursor: not-allowed;
         }
 
-        /* ==================== 弹窗样式 ==================== */
         .modal-mask {
             position: fixed;
             top: 0; left: 0;
@@ -594,7 +584,6 @@
             text-align: center;
         }
 
-        /* ==================== 状态提示 ==================== */
         .sync-status {
             position: fixed;
             bottom: 80px;
@@ -619,7 +608,6 @@
             background: #dc2626;
         }
 
-        /* ==================== 响应式 ==================== */
         @media (max-width: 700px) {
             .scrollable-main { padding: 16px 16px 0 16px; }
             .hero { padding: 16px 20px; }
@@ -636,13 +624,11 @@
 <body>
 <div class="scrollable-main">
     <div class="container">
-        <!-- 头部 -->
         <div class="hero">
             <h1>🏥 盐池河镇卫生院 <span>职工心声驿站</span></h1>
             <p>💚 畅所欲言谋发展 · 凝心聚力提待遇 · 您的每一条建议，都为改善薪资福利、优化医院管理赋能</p>
         </div>
 
-        <!-- 职工建言动态 -->
         <div class="dynamic-card">
             <div class="dynamic-header">
                 <div class="dynamic-title">
@@ -659,7 +645,6 @@
             </div>
         </div>
 
-        <!-- 建言献策表单 -->
         <div class="card">
             <div class="card-header red-title">
                 <div class="icon">✍️</div>
@@ -677,7 +662,6 @@
             </div>
         </div>
 
-        <!-- 数据统计看板 -->
         <div class="stats-panel">
             <div class="stats-panel-header">
                 <h3>📊 数据统计看板</h3>
@@ -703,7 +687,6 @@
             </div>
         </div>
 
-        <!-- 页脚 + 院务数据中心入口 -->
         <div class="footer-admin">
             <span>🌟 所有建议仅用于医院发展与职工薪资待遇优化 | 匿名提交保护隐私</span>
             <span class="admin-trigger" id="adminTriggerBtn">🔒 院务数据中心</span>
@@ -713,7 +696,6 @@
             </div>
         </div>
 
-        <!-- 管理员工具区域 -->
         <div id="adminToolsArea" style="display: none; margin-top: 12px;">
             <div class="light-toolbar">
                 <button id="exportExcelBtn">📎 导出Excel</button>
@@ -752,10 +734,8 @@
 </div>
 
 <script>
-// ==================== 安全配置 ====================
-// 密码通过哈希验证，不在前端暴露明文
-// 注意：实际生产环境应使用后端API验证，这里使用SHA-256模拟
-const ADMIN_PASSWORD_HASH = "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92"; // "565612056561205656120" 的 SHA-256
+// ==================== 管理员密码配置 ====================
+const ADMIN_PASSWORD = "565612056561205656120";
 
 // ==================== 常量定义 ====================
 const STORAGE_KEY = "hospital_staff_voice_2026_v2";
@@ -763,77 +743,37 @@ const MEMOS_API_URL = "https://memos.yaotongtie.com/api/v1/memos";
 const MEMOS_TOKEN = "memos_pat_Zomvw9ZB47TgMB0tiTNDdgp9KcQgFQbr";
 const WEBHOOK_URL = "https://ts.yaotongtie.com/webhook/9aa9a00f56d04c718540d5b485c4fc73";
 
-// 提交频率限制（同一IP每小时最多5次，这里用localStorage模拟）
 const SUBMIT_LIMIT_KEY = "submit_limit";
 const MAX_SUBMITS_PER_HOUR = 5;
-
-// 请求超时时间（毫秒）
 const REQUEST_TIMEOUT = 15000;
+const SYNC_INTERVAL = 30000; // 30秒自动同步一次
+
+let isAdminLoggedIn = false;
+let syncTimer = null;
 
 // ==================== 工具函数 ====================
-function sha256(message) {
-    // 简单的SHA-256实现（用于密码验证）
-    async function sha256Hash(str) {
-        const encoder = new TextEncoder();
-        const data = encoder.encode(str);
-        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-        const hashArray = Array.from(new Uint8Array(hashBuffer));
-        return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-    }
-    return sha256Hash(message);
-}
-
-// XSS防护 - 增强版
 function escapeHtml(str) { 
     if(!str) return ""; 
-    return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]))
-              .replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
-                  return c; // 保留emoji
-              })
-              .replace(/[\\]/g, '\\\\');
+    return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));
 }
 
-// 输入内容净化（移除危险字符）
 function sanitizeInput(str) {
     if (!str) return "";
-    // 移除潜在的危险字符，但保留中文、英文、数字、常用标点
-    return str.replace(/[<>'"]/g, '').substring(0, 1000);
+    return str.substring(0, 1000);
 }
 
-// 检查提交频率限制
-function checkSubmitLimit() {
-    try {
-        const now = Date.now();
-        const hour = 3600000;
-        let records = JSON.parse(localStorage.getItem(SUBMIT_LIMIT_KEY) || '[]');
-        // 过滤掉1小时前的记录
-        records = records.filter(t => now - t < hour);
-        if (records.length >= MAX_SUBMITS_PER_HOUR) {
-            return { allowed: false, remaining: 0, waitMinutes: Math.ceil((hour - (now - records[0])) / 60000) };
-        }
-        return { allowed: true, remaining: MAX_SUBMITS_PER_HOUR - records.length };
-    } catch(e) {
-        return { allowed: true, remaining: MAX_SUBMITS_PER_HOUR };
-    }
+function showSyncMessage(msg, isError = false, duration = 3000) {
+    const el = document.getElementById("syncStatus");
+    if (!el) return;
+    el.textContent = isError ? `⚠️ ${msg}` : `✓ ${msg}`;
+    el.className = `sync-status show ${isError ? 'error' : 'success'}`;
+    setTimeout(() => el.classList.remove("show"), duration);
 }
 
-function recordSubmit() {
-    try {
-        const now = Date.now();
-        let records = JSON.parse(localStorage.getItem(SUBMIT_LIMIT_KEY) || '[]');
-        records = records.filter(t => now - t < 3600000);
-        records.push(now);
-        localStorage.setItem(SUBMIT_LIMIT_KEY, JSON.stringify(records));
-    } catch(e) {}
-}
-
-// 带超时的fetch
 function fetchWithTimeout(url, options, timeout = REQUEST_TIMEOUT) {
     return Promise.race([
         fetch(url, options),
-        new Promise((_, reject) => 
-            setTimeout(() => reject(new Error('请求超时')), timeout)
-        )
+        new Promise((_, reject) => setTimeout(() => reject(new Error('请求超时')), timeout))
     ]);
 }
 
@@ -856,7 +796,6 @@ function saveData(arr) {
         renderStats();
     } catch(e) {
         console.error("保存数据失败:", e);
-        showSyncMessage("保存失败，请检查存储空间", true, 3000);
     }
 }
 
@@ -892,15 +831,15 @@ function extractKeywordsFromText(text) {
 
 function getDynamicCategory(keywords) {
     const categoryMapping = {
-        "薪资待遇": ["工资", "薪资", "待遇", "绩效", "补贴", "夜班费", "年终奖", "奖金", "福利", "加班费", "收入"],
-        "人员配置": ["人手", "缺人", "招聘", "编制", "一人多岗", "超负荷", "排班", "轮岗", "人员不足", "工作量大"],
-        "医保管理": ["医保", "扣款", "违规", "诊疗收费", "检查", "报销", "DRG", "DIP", "扣费"],
-        "医患关系": ["医患", "纠纷", "投诉", "沟通", "矛盾", "患者", "满意度"],
-        "培训发展": ["培训", "进修", "学习", "职称", "晋升", "职业发展", "技能"],
-        "医疗设备": ["设备", "老化", "维修", "更新", "检查", "仪器"],
-        "药品耗材": ["药品", "耗材", "缺货", "供应", "库存", "采购"],
-        "信息化": ["系统", "HIS", "电子病历", "录入", "软件", "信息化", "网络"],
-        "后勤保障": ["宿舍", "食堂", "通勤", "休息", "环境", "办公"]
+        "💰 薪资待遇": ["工资", "薪资", "待遇", "绩效", "补贴", "夜班费", "年终奖", "奖金", "福利", "加班费", "收入"],
+        "👥 人员配置": ["人手", "缺人", "招聘", "编制", "一人多岗", "超负荷", "排班", "轮岗", "人员不足", "工作量大"],
+        "🏥 医保管理": ["医保", "扣款", "违规", "诊疗收费", "检查", "报销", "DRG", "DIP", "扣费"],
+        "💬 医患关系": ["医患", "纠纷", "投诉", "沟通", "矛盾", "患者", "满意度"],
+        "📚 培训发展": ["培训", "进修", "学习", "职称", "晋升", "职业发展", "技能"],
+        "🏥 医疗设备": ["设备", "老化", "维修", "更新", "检查", "仪器"],
+        "📦 药品耗材": ["药品", "耗材", "缺货", "供应", "库存", "采购"],
+        "💻 信息化": ["系统", "HIS", "电子病历", "录入", "软件", "信息化", "网络"],
+        "🏠 后勤保障": ["宿舍", "食堂", "通勤", "休息", "环境", "办公"]
     };
     for (const [category, keywordsList] of Object.entries(categoryMapping)) {
         for (const kw of keywords) {
@@ -909,7 +848,7 @@ function getDynamicCategory(keywords) {
             }
         }
     }
-    return "其他建议";
+    return "📝 其他建议";
 }
 
 // ==================== 统计数据计算 ====================
@@ -967,7 +906,7 @@ function renderStats() {
     if (keywordList) keywordList.innerHTML = keywordHtml;
     const categoryHtml = stats.categoryCount.length === 0
         ? '<div style="color:#94a3b8; text-align:center; padding:20px;">暂无数据</div>'
-        : stats.categoryCount.map(([category, count]) => `<div class="stat-item"><span>📌 ${escapeHtml(category)}</span><span class="count">${count}条</span></div>`).join("");
+        : stats.categoryCount.map(([category, count]) => `<div class="stat-item"><span>${escapeHtml(category)}</span><span class="count">${count}条</span></div>`).join("");
     const categoryList = document.getElementById("categoryList");
     if (categoryList) categoryList.innerHTML = categoryHtml;
 }
@@ -1077,14 +1016,6 @@ function truncate(str, maxLen = 46) {
     return str.substring(0, maxLen) + "..."; 
 }
 
-function showSyncMessage(msg, isError = false, duration = 3000) {
-    const el = document.getElementById("syncStatus");
-    if (!el) return;
-    el.textContent = isError ? `⚠️ ${msg}` : `✓ ${msg}`;
-    el.className = `sync-status show ${isError ? 'error' : 'success'}`;
-    setTimeout(() => el.classList.remove("show"), duration);
-}
-
 function generateContentHash(suggest, solution) {
     const normalizedSuggest = suggest.trim().toLowerCase().replace(/\s+/g, ' ');
     const normalizedSolution = solution.trim().toLowerCase().replace(/\s+/g, ' ');
@@ -1095,12 +1026,6 @@ function generateContentHash(suggest, solution) {
         hash |= 0;
     }
     return Math.abs(hash).toString(36);
-}
-
-function isDuplicate(suggest, solution) {
-    const data = loadData();
-    const newHash = generateContentHash(suggest, solution);
-    return data.some(item => item.contentHash === newHash);
 }
 
 function buildMarqueeItems() {
@@ -1225,7 +1150,7 @@ async function collectFullPrivacy() {
     };
 }
 
-// ==================== Memos 同步 ====================
+// ==================== Memos 同步（核心：双向同步） ====================
 async function fetchMemosData() {
     try {
         console.log("开始从 Memos 读取历史数据...");
@@ -1240,8 +1165,13 @@ async function fetchMemosData() {
         const result = await response.json();
         const memosList = result.memos || [];
         console.log(`从 Memos 读取到 ${memosList.length} 条笔记`);
+        
+        // 提取云端笔记的ID集合
+        const cloudMemoIds = new Set();
         const parsedData = [];
+        
         for (const memo of memosList) {
+            cloudMemoIds.add(memo.id);
             const content = memo.content || "";
             const suggestMatch = content.match(/## 💬 问题\/建议\n\n([\s\S]*?)\n\n## 🧠/);
             const solutionMatch = content.match(/## 🧠 解决思路\/方案\n\n([\s\S]*?)\n\n---/);
@@ -1274,19 +1204,101 @@ async function fetchMemosData() {
                 });
             }
         }
-        return parsedData;
+        
+        return { cloudData: parsedData, cloudMemoIds };
     } catch (error) {
         console.error("从 Memos 读取失败:", error);
-        showSyncMessage("云端读取失败: " + error.message, true, 3000);
-        return [];
+        return { cloudData: [], cloudMemoIds: new Set() };
     }
 }
 
+// 全量同步：合并云端数据，删除本地中已从云端删除的条目
+async function fullSyncFromMemos(showMessage = false) {
+    try {
+        if (showMessage) showSyncMessage("正在同步云端数据...", false, 2000);
+        
+        const { cloudData, cloudMemoIds } = await fetchMemosData();
+        let localData = loadData();
+        
+        // 1. 删除本地中已在云端删除的条目（且不是本地新增未同步的）
+        const localIdsToKeep = localData.filter(item => {
+            // 如果已经同步到云端，但云端没有这个ID，则删除
+            if (item.syncedToMemos && item.memosId && !cloudMemoIds.has(item.memosId)) {
+                console.log(`删除已从云端移除的条目: ${item.memosId}`);
+                return false;
+            }
+            return true;
+        });
+        
+        // 2. 合并云端新数据（去重）
+        const existingIds = new Set(localIdsToKeep.map(item => item.id));
+        const existingHashes = new Set(localIdsToKeep.map(item => item.contentHash));
+        
+        let addedCount = 0;
+        for (const cloudItem of cloudData) {
+            if (!existingIds.has(cloudItem.id) && !existingHashes.has(cloudItem.contentHash)) {
+                localIdsToKeep.push(cloudItem);
+                addedCount++;
+            } else {
+                // 更新本地已存在但标记未同步的条目
+                const existingIndex = localIdsToKeep.findIndex(item => item.contentHash === cloudItem.contentHash);
+                if (existingIndex !== -1 && !localIdsToKeep[existingIndex].syncedToMemos) {
+                    localIdsToKeep[existingIndex].syncedToMemos = true;
+                    localIdsToKeep[existingIndex].memosId = cloudItem.memosId;
+                    localIdsToKeep[existingIndex].id = cloudItem.id;
+                    console.log(`更新本地条目同步状态: ${cloudItem.id}`);
+                }
+            }
+        }
+        
+        // 3. 按时间排序
+        localIdsToKeep.sort((a, b) => new Date(a.time) - new Date(b.time));
+        
+        // 4. 保存
+        if (addedCount > 0 || localIdsToKeep.length !== localData.length) {
+            saveData(localIdsToKeep);
+            if (showMessage) {
+                showSyncMessage(`✅ 同步完成：新增 ${addedCount} 条，删除 ${localData.length - localIdsToKeep.length} 条`, false, 4000);
+            } else {
+                console.log(`后台同步：新增 ${addedCount} 条，删除 ${localData.length - localIdsToKeep.length} 条`);
+            }
+        } else if (showMessage) {
+            showSyncMessage("云端数据已是最新", false, 2000);
+        }
+        
+        return { added: addedCount, removed: localData.length - localIdsToKeep.length };
+    } catch (error) {
+        console.error("同步失败:", error);
+        if (showMessage) showSyncMessage("同步失败: " + error.message, true, 3000);
+        return { added: 0, removed: 0 };
+    }
+}
+
+// 启动定时同步
+function startAutoSync() {
+    if (syncTimer) clearInterval(syncTimer);
+    syncTimer = setInterval(async () => {
+        console.log("自动同步检查...");
+        await fullSyncFromMemos(false);
+    }, SYNC_INTERVAL);
+    console.log(`已启动自动同步，间隔 ${SYNC_INTERVAL / 1000} 秒`);
+}
+
+function stopAutoSync() {
+    if (syncTimer) {
+        clearInterval(syncTimer);
+        syncTimer = null;
+        console.log("已停止自动同步");
+    }
+}
+
+// ==================== Memos 写入 ====================
 async function syncToMemos(suggest, solution, timeStr, entryId, privacy) {
     try {
         const allData = loadData();
         const entry = allData.find(item => item.id === entryId);
         if (entry && entry.syncedToMemos) return true;
+        
         const content = `# 🏥 盐池河镇卫生院 · 职工心声
 
 ## 💬 问题/建议
@@ -1310,6 +1322,7 @@ ${solution}
 
 ---
 *本内容由职工匿名提交，仅用于医院内部管理及薪资待遇优化参考*`;
+        
         const response = await fetchWithTimeout(MEMOS_API_URL, {
             method: "POST",
             headers: {
@@ -1318,8 +1331,10 @@ ${solution}
             },
             body: JSON.stringify({ content: content, visibility: "PRIVATE" })
         });
+        
         if (!response.ok) throw new Error(`API 错误 (${response.status})`);
         const result = await response.json();
+        
         const allData2 = loadData();
         const index = allData2.findIndex(item => item.id === entryId);
         if (index !== -1) {
@@ -1341,15 +1356,18 @@ async function pushToWebhook(suggest, solution, timeStr, privacy, entryId) {
         const allData = loadData();
         const entry = allData.find(item => item.id === entryId);
         if (entry && entry.webhookSent) return true;
+        
         const webhookData = {
             msgtype: "text",
             text: { content: `【盐池河镇卫生院·职工心声】\n\n匿名ID：${privacy.anonymousId}\n\n问题/建议：\n${suggest}\n\n解决思路：\n${solution}\n\n提交时间：${timeStr}\n设备：${privacy.deviceDetail.deviceType} | ${privacy.deviceDetail.browser}\nIP：${privacy.publicIP}` }
         };
+        
         const response = await fetchWithTimeout(WEBHOOK_URL, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(webhookData)
         });
+        
         if (response.ok) {
             const allData = loadData();
             const index = allData.findIndex(item => item.id === entryId);
@@ -1375,27 +1393,26 @@ async function submitData() {
         alert("请完整填写问题/建议及解决方法"); 
         return; 
     }
-    if (isDuplicate(suggest, solution)) { 
-        alert("⚠️ 相同内容已提交过，请勿重复提交"); 
-        return; 
-    }
-    // 频率限制检查
+    
     const limit = checkSubmitLimit();
     if (!limit.allowed) {
         alert(`提交过于频繁，请等待 ${limit.waitMinutes} 分钟后重试`);
         return;
     }
+    
     const btn = document.getElementById("submitBtn");
     const orig = btn ? btn.innerHTML : "提交";
     if (btn) {
         btn.disabled = true; 
         btn.innerHTML = "🌱 提交中...";
     }
+    
     try {
         const privacy = await collectFullPrivacy();
         const entryId = Date.now() + "_" + Math.random().toString(36).substr(2, 8);
         const timeStr = new Date().toLocaleString("zh-CN", { hour12: false });
         const contentHash = generateContentHash(suggest, solution);
+        
         const newEntry = {
             id: entryId, contentHash, suggest, solution, time: timeStr,
             publicIP: privacy.publicIP, localIP: privacy.localIP,
@@ -1403,17 +1420,20 @@ async function submitData() {
             anonymousId: privacy.anonymousId, syncedToMemos: false, webhookSent: false,
             memosId: null, syncTime: null, webhookTime: null
         };
+        
         const list = loadData();
         list.push(newEntry);
         saveData(list);
         recordSubmit();
         resetTextareaToExample();
         showSuccessToast();
+        
         // 异步同步
         Promise.all([
             syncToMemos(suggest, solution, timeStr, entryId, privacy),
             pushToWebhook(suggest, solution, timeStr, privacy, entryId)
         ]).catch(err => console.error("同步错误:", err));
+        
         if (isAdminLoggedIn) renderAdminList();
     } catch(e) { 
         console.error("提交失败:", e);
@@ -1423,15 +1443,37 @@ async function submitData() {
     }
 }
 
-// ==================== 管理员功能 ====================
-let isAdminLoggedIn = false;
+function checkSubmitLimit() {
+    try {
+        const now = Date.now();
+        const hour = 3600000;
+        let records = JSON.parse(localStorage.getItem(SUBMIT_LIMIT_KEY) || '[]');
+        records = records.filter(t => now - t < hour);
+        if (records.length >= MAX_SUBMITS_PER_HOUR) {
+            return { allowed: false, remaining: 0, waitMinutes: Math.ceil((hour - (now - records[0])) / 60000) };
+        }
+        return { allowed: true, remaining: MAX_SUBMITS_PER_HOUR - records.length };
+    } catch(e) {
+        return { allowed: true, remaining: MAX_SUBMITS_PER_HOUR };
+    }
+}
 
-async function adminLogin() {
+function recordSubmit() {
+    try {
+        const now = Date.now();
+        let records = JSON.parse(localStorage.getItem(SUBMIT_LIMIT_KEY) || '[]');
+        records = records.filter(t => now - t < 3600000);
+        records.push(now);
+        localStorage.setItem(SUBMIT_LIMIT_KEY, JSON.stringify(records));
+    } catch(e) {}
+}
+
+// ==================== 管理员功能 ====================
+function adminLogin() {
     const pwdInput = document.getElementById("adminPwd");
     if (!pwdInput) return false;
     const pwd = pwdInput.value;
-    const hash = await sha256(pwd);
-    if (hash !== ADMIN_PASSWORD_HASH) { 
+    if (pwd !== ADMIN_PASSWORD) { 
         alert("密码错误"); 
         return false; 
     }
@@ -1562,30 +1604,9 @@ async function syncAllPending() {
     if (isAdminLoggedIn) renderAdminList();
 }
 
-async function manualMergeCloudToLocal() {
+async function manualFullSync() {
     if (!isAdminLoggedIn) { alert("请先验证管理员权限"); return; }
-    showSyncMessage("正在从云端恢复数据...", false, 2000);
-    const cloudData = await fetchMemosData();
-    if (cloudData.length === 0) {
-        showSyncMessage("云端暂无历史数据", false, 2000);
-        return;
-    }
-    let localData = loadData();
-    const existingIds = new Set(localData.map(item => item.id));
-    const existingHashes = new Set(localData.map(item => item.contentHash));
-    let addedCount = 0;
-    for (const cloudItem of cloudData) {
-        if (!existingIds.has(cloudItem.id) && !existingHashes.has(cloudItem.contentHash)) {
-            localData.push(cloudItem);
-            addedCount++;
-        }
-    }
-    if (addedCount > 0) {
-        saveData(localData);
-        showSyncMessage(`✅ 从云端恢复了 ${addedCount} 条历史数据`, false, 4000);
-    } else {
-        showSyncMessage("云端数据已全部同步", false, 2000);
-    }
+    await fullSyncFromMemos(true);
     refreshMarquee();
     renderStats();
     if (isAdminLoggedIn) renderAdminList();
@@ -1606,6 +1627,7 @@ function toggleAdminLogin() {
 // ==================== 初始化 ====================
 function init() {
     initTextareaBehavior();
+    
     // 绑定事件
     document.getElementById("submitBtn")?.addEventListener("click", submitData);
     document.getElementById("verifyAdminBtn")?.addEventListener("click", adminLogin);
@@ -1614,31 +1636,23 @@ function init() {
     document.getElementById("retrySyncBtn")?.addEventListener("click", retryFailedSync);
     document.getElementById("testWebhookBtn")?.addEventListener("click", testWebhook);
     document.getElementById("syncAllBtn")?.addEventListener("click", syncAllPending);
-    document.getElementById("syncFromMemosBtn")?.addEventListener("click", manualMergeCloudToLocal);
+    document.getElementById("syncFromMemosBtn")?.addEventListener("click", manualFullSync);
     document.getElementById("refreshStatsBtn")?.addEventListener("click", () => { renderStats(); showSyncMessage("统计面板已刷新", false, 1500); });
     document.getElementById("adminTriggerBtn")?.addEventListener("click", toggleAdminLogin);
     document.getElementById("adminPwd")?.addEventListener("keypress", (e) => { if (e.key === "Enter") adminLogin(); });
     document.getElementById("detailModal")?.addEventListener("click", (e) => { if (e.target === document.getElementById("detailModal")) closeModal(); });
     document.getElementById("successModal")?.addEventListener("click", (e) => { if (e.target === document.getElementById("successModal")) closeSuccessModal(); });
-    // 加载数据
+    
+    // 加载本地数据
     updateTotalUI();
     refreshMarquee();
     renderStats();
-    // 后台同步Memos数据
-    setTimeout(() => { fetchMemosData().then(cloudData => {
-        if (cloudData.length > 0) {
-            let localData = loadData();
-            let added = 0;
-            const existingHashes = new Set(localData.map(item => item.contentHash));
-            for (const cloudItem of cloudData) {
-                if (!existingHashes.has(cloudItem.contentHash)) {
-                    localData.push(cloudItem);
-                    added++;
-                }
-            }
-            if (added > 0) saveData(localData);
-        }
-    }).catch(e => console.log("后台同步完成")); }, 2000);
+    
+    // 首次全量同步（静默）
+    setTimeout(async () => {
+        await fullSyncFromMemos(false);
+        startAutoSync(); // 启动定时同步
+    }, 2000);
 }
 
 window.closeModal = function() { document.getElementById('detailModal')?.classList.remove('active'); };
