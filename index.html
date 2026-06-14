@@ -1151,12 +1151,10 @@ async function collectFullPrivacy() {
 }
 
 // ==================== Memos API 调用 ====================
-// 获取所有 Memos 笔记（使用正确的 API 格式）
 async function fetchAllMemos() {
     try {
         console.log("🔍 开始从 Memos 读取数据...");
         
-        // Memos v0.22+ API 格式：GET /api/v1/memos?pageSize=100
         const response = await fetchWithTimeout(`${MEMOS_API_URL}?pageSize=100`, {
             method: "GET",
             headers: {
@@ -1173,7 +1171,6 @@ async function fetchAllMemos() {
         const result = await response.json();
         console.log("📡 API 响应:", result);
         
-        // 兼容不同的响应格式
         let memosList = [];
         if (result.memos && Array.isArray(result.memos)) {
             memosList = result.memos;
@@ -1191,25 +1188,18 @@ async function fetchAllMemos() {
     }
 }
 
-// 解析 Memos 内容，提取建言信息
 function parseMemosContent(memo) {
     try {
         const content = memo.content || "";
         
-        // 检查是否是本系统生成的笔记（包含特定标题）
         if (!content.includes("🏥 盐池河镇卫生院 · 职工心声")) {
             return null;
         }
         
-        // 提取问题/建议
         const suggestMatch = content.match(/## 💬 问题\/建议\n\n([\s\S]*?)\n\n## 🧠/);
-        // 提取解决思路
         const solutionMatch = content.match(/## 🧠 解决思路\/方案\n\n([\s\S]*?)\n\n---/);
-        // 提取时间
         const timeMatch = content.match(/\*\*📅 提交时间\*\*：([^\n]+)/);
-        // 提取匿名ID
         const idMatch = content.match(/\*\*🆔 匿名ID\*\*：([^\n]+)/);
-        // 提取IP
         const ipMatch = content.match(/🌐 公网IP：([^\n]+)/);
         
         if (suggestMatch && solutionMatch) {
@@ -1235,7 +1225,7 @@ function parseMemosContent(memo) {
     }
 }
 
-// 全量同步：以云端为准，本地完全同步为云端镜像
+// 全量同步：支持新增、删除、修改
 async function fullSyncFromMemos(showMessage = false) {
     try {
         if (showMessage) showSyncMessage("正在同步云端数据...", false, 2000);
@@ -1243,15 +1233,14 @@ async function fullSyncFromMemos(showMessage = false) {
         // 1. 从云端获取所有笔记
         const memosList = await fetchAllMemos();
         const cloudItems = [];
-        const cloudMemoIds = new Set();
+        const cloudItemMap = new Map(); // id -> cloudItem
         
         for (const memo of memosList) {
-            cloudMemoIds.add(memo.id);
             const parsed = parseMemosContent(memo);
             if (parsed) {
-                // 生成内容哈希用于去重
                 parsed.contentHash = generateContentHash(parsed.suggest, parsed.solution);
                 cloudItems.push(parsed);
+                cloudItemMap.set(memo.id, parsed);
             }
         }
         
@@ -1261,58 +1250,84 @@ async function fullSyncFromMemos(showMessage = false) {
         let localData = loadData();
         console.log(`💻 本地数据: ${localData.length} 条`);
         
-        // 3. 以云端为准，构建新的本地数据
+        // 3. 构建新的本地数据
         const newLocalData = [];
-        const processedHashes = new Set();
+        const processedIds = new Set();
+        let updatedCount = 0;
+        let addedCount = 0;
+        let deletedCount = 0;
         
-        // 3a. 先添加所有云端数据
+        // 3a. 处理云端数据
         for (const cloudItem of cloudItems) {
-            newLocalData.push(cloudItem);
-            processedHashes.add(cloudItem.contentHash);
+            // 查找本地是否有相同 memosId 的条目
+            const existingLocal = localData.find(item => item.memosId === cloudItem.memosId);
+            
+            if (existingLocal) {
+                // 本地存在，检查内容是否变化
+                const oldHash = existingLocal.contentHash;
+                const newHash = cloudItem.contentHash;
+                
+                if (oldHash !== newHash) {
+                    // 内容已修改，更新本地
+                    console.log(`✏️ 检测到内容修改: ${cloudItem.memosId}`);
+                    newLocalData.push({
+                        ...cloudItem,
+                        id: existingLocal.id, // 保留本地ID
+                        webhookSent: existingLocal.webhookSent || true,
+                        webhookTime: existingLocal.webhookTime
+                    });
+                    updatedCount++;
+                } else {
+                    // 内容未变化，保留原数据
+                    newLocalData.push(existingLocal);
+                }
+                processedIds.add(existingLocal.id);
+            } else {
+                // 本地不存在，新增
+                console.log(`➕ 新增云端条目: ${cloudItem.memosId}`);
+                newLocalData.push(cloudItem);
+                addedCount++;
+            }
         }
         
         // 3b. 添加本地新增但尚未同步到云端的数据
         let localOnlyCount = 0;
         for (const localItem of localData) {
-            // 如果本地条目没有同步到云端（没有 memosId 或 syncedToMemos 为 false）
-            if (!localItem.syncedToMemos && !localItem.memosId) {
-                if (!processedHashes.has(localItem.contentHash)) {
-                    newLocalData.push(localItem);
-                    processedHashes.add(localItem.contentHash);
-                    localOnlyCount++;
-                    console.log(`📝 保留本地新增条目: ${localItem.id.substring(0, 8)}...`);
-                }
+            if (!processedIds.has(localItem.id) && !localItem.syncedToMemos && !localItem.memosId) {
+                // 本地新增未同步
+                newLocalData.push(localItem);
+                localOnlyCount++;
+                console.log(`📝 保留本地新增条目: ${localItem.id.substring(0, 8)}...`);
             }
         }
+        
+        // 计算删除数量
+        deletedCount = localData.length - (newLocalData.length - localOnlyCount);
         
         // 4. 按时间排序
         newLocalData.sort((a, b) => new Date(a.time) - new Date(b.time));
         
-        // 5. 计算变化
-        const addedCount = cloudItems.length - (localData.filter(item => item.syncedToMemos).length);
-        const deletedCount = localData.filter(item => item.syncedToMemos && !cloudMemoIds.has(item.memosId)).length;
-        
-        console.log(`📊 同步统计: 云端新增 ${addedCount} 条, 云端删除 ${deletedCount} 条, 本地新增 ${localOnlyCount} 条`);
-        
-        // 6. 保存
-        if (addedCount !== 0 || deletedCount !== 0 || localOnlyCount !== 0) {
+        // 5. 保存
+        if (addedCount > 0 || deletedCount > 0 || updatedCount > 0 || localOnlyCount > 0) {
             saveData(newLocalData);
             if (showMessage) {
-                let msg = `同步完成`;
-                if (addedCount > 0) msg += `，新增 ${addedCount} 条`;
-                if (deletedCount > 0) msg += `，删除 ${deletedCount} 条`;
-                if (localOnlyCount > 0) msg += `，本地 ${localOnlyCount} 条待同步`;
-                showSyncMessage(`✅ ${msg}`, false, 4000);
+                let msgParts = [];
+                if (addedCount > 0) msgParts.push(`新增 ${addedCount} 条`);
+                if (deletedCount > 0) msgParts.push(`删除 ${deletedCount} 条`);
+                if (updatedCount > 0) msgParts.push(`更新 ${updatedCount} 条`);
+                if (localOnlyCount > 0) msgParts.push(`本地 ${localOnlyCount} 条待同步`);
+                showSyncMessage(`✅ 同步完成：${msgParts.join('，')}`, false, 4000);
             }
+            console.log(`📊 同步统计: 新增 ${addedCount}, 删除 ${deletedCount}, 更新 ${updatedCount}, 本地新增 ${localOnlyCount}`);
         } else if (showMessage) {
             showSyncMessage("云端数据已是最新", false, 2000);
         }
         
-        return { added: addedCount, removed: deletedCount, localOnly: localOnlyCount };
+        return { added: addedCount, removed: deletedCount, updated: updatedCount, localOnly: localOnlyCount };
     } catch (error) {
         console.error("❌ 同步失败:", error);
         if (showMessage) showSyncMessage("同步失败: " + error.message, true, 3000);
-        return { added: 0, removed: 0, localOnly: 0 };
+        return { added: 0, removed: 0, updated: 0, localOnly: 0 };
     }
 }
 
@@ -1691,11 +1706,11 @@ function init() {
     refreshMarquee();
     renderStats();
     
-    // 首次全量同步（静默）
+    // 首次全量同步
     setTimeout(async () => {
         console.log("🚀 执行首次同步...");
         await fullSyncFromMemos(true);
-        startAutoSync(); // 启动定时同步
+        startAutoSync();
     }, 3000);
 }
 
